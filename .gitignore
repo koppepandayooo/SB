@@ -293,3 +293,6 @@ __pycache__/
 *.xsd.cs
 bin/
 obj/
+Installer scripts/App-Version.txt
+Installers/*.exe
+Installer scripts/ExtractVersionInfo.exe

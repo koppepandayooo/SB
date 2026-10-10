@@ -1,5 +1,5 @@
 # define name of installer
-	!system "ExtractVersionInfo.exe"
+	!system ".\ExtractVersionInfo.exe"
 	!include "App-Version.txt"
 	!include "MUI.nsh"
 	!include "FileFunc.nsh"
@@ -35,6 +35,7 @@
  
 # language
 	!insertmacro MUI_LANGUAGE "English"
+	!insertmacro MUI_LANGUAGE "Japanese"
 
 # start default section
 Section
@@ -52,6 +53,7 @@ Section
     File "..\SB\bin\Release\GalaSoft.MvvmLight.Extras.dll"
     File "..\SB\bin\Release\GalaSoft.MvvmLight.Platform.dll"
     File "..\SB\bin\Release\SB.exe"
+    File "..\SB\bin\Release\SB.exe.config"
     File "..\SB\bin\Release\SB.Business.dll"
     File "..\SB\bin\Release\SB.Controls.dll"
     File "..\SB\bin\Release\SB.Converters.dll"
@@ -66,8 +68,10 @@ Section
     File "..\SB\bin\Release\NAudio.dll"
     File "..\SB\bin\Release\NAudio.Vorbis.dll"
     File "..\SB\bin\Release\NVorbis.dll"
-    File "..\SB\bin\Release\Octokit.dll"
+    File "..\SB\bin\Release\CommonServiceLocator.dll"
     File "..\SB\bin\Release\System.Windows.Interactivity.dll"
+    File "..\LICENSE"
+    File "..\README.md"
  
     # create a shortcut named "new shortcut" in the start menu programs directory
     # point the new shortcut at the program uninstaller
@@ -108,6 +112,7 @@ Section "uninstall"
     Delete "$INSTDIR\GalaSoft.MvvmLight.Extras.dll"
     Delete "$INSTDIR\GalaSoft.MvvmLight.Platform.dll"
     Delete "$INSTDIR\SB.exe"
+    Delete "$INSTDIR\SB.exe.config"
     Delete "$INSTDIR\SB.Business.dll"
     Delete "$INSTDIR\SB.Controls.dll"
     Delete "$INSTDIR\SB.Converters.dll"
@@ -122,8 +127,10 @@ Section "uninstall"
     Delete "$INSTDIR\NAudio.dll"
     Delete "$INSTDIR\NAudio.Vorbis.dll"
     Delete "$INSTDIR\NVorbis.dll"
-    Delete "$INSTDIR\Octokit.dll"
+    Delete "$INSTDIR\CommonServiceLocator.dll"
     Delete "$INSTDIR\System.Windows.Interactivity.dll"
+    Delete "$INSTDIR\LICENSE"
+    Delete "$INSTDIR\README.md"
     StrCpy $0 "$INSTDIR"
     Call un.DeleteDirIfEmpty
  
