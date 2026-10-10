@@ -1,0 +1,73 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="Str_Settings" xml:space="preserve">設定</sys:String>
+    <sys:String x:Key="Str_PresetFormat" xml:space="preserve">プリセット: {0}</sys:String>
+    <sys:String x:Key="Str_NotAdmin" xml:space="preserve">管理者権限なし</sys:String>
+    <sys:String x:Key="Str_Help" xml:space="preserve">ヘルプ</sys:String>
+    <sys:String x:Key="Str_About" xml:space="preserve">バージョン情報</sys:String>
+    <sys:String x:Key="Str_Sounds" xml:space="preserve">サウンド</sys:String>
+    <sys:String x:Key="Str_Mute" xml:space="preserve">ミュート</sys:String>
+    <sys:String x:Key="Str_Unmute" xml:space="preserve">ミュート解除</sys:String>
+    <sys:String x:Key="Str_AddSound" xml:space="preserve">サウンドを追加</sys:String>
+    <sys:String x:Key="Str_RemoveSound" xml:space="preserve">サウンドを削除</sys:String>
+    <sys:String x:Key="Str_Play" xml:space="preserve">再生</sys:String>
+    <sys:String x:Key="Str_Pause" xml:space="preserve">一時停止</sys:String>
+    <sys:String x:Key="Str_Stop" xml:space="preserve">停止</sys:String>
+    <sys:String x:Key="Str_Add" xml:space="preserve">追加</sys:String>
+    <sys:String x:Key="Str_Edit" xml:space="preserve">編集</sys:String>
+    <sys:String x:Key="Str_Remove" xml:space="preserve">削除</sys:String>
+    <sys:String x:Key="Str_Name" xml:space="preserve">名前</sys:String>
+    <sys:String x:Key="Str_Keys" xml:space="preserve">キー</sys:String>
+    <sys:String x:Key="Str_DropHint" xml:space="preserve">ここに音声ファイル（複数可）やフォルダをドラッグ＆ドロップ</sys:String>
+    <sys:String x:Key="Str_TabKeyboardMouse" xml:space="preserve">キーボード / マウス</sys:String>
+    <sys:String x:Key="Str_TabSound" xml:space="preserve">サウンド</sys:String>
+    <sys:String x:Key="Str_TabPresets" xml:space="preserve">プリセット</sys:String>
+    <sys:String x:Key="Str_TabOther" xml:space="preserve">その他</sys:String>
+    <sys:String x:Key="Str_PlaySelectedLabel" xml:space="preserve">選択中を再生:</sys:String>
+    <sys:String x:Key="Str_PlaySelectedTip" xml:space="preserve">キーボードのキーの他に、マウスの中ボタン(MBUTTON)・サイドボタン(XBUTTON1/2)も割り当てできます</sys:String>
+    <sys:String x:Key="Str_PauseLabel" xml:space="preserve">一時停止:</sys:String>
+    <sys:String x:Key="Str_ContinueLabel" xml:space="preserve">再開:</sys:String>
+    <sys:String x:Key="Str_StopLabel" xml:space="preserve">停止:</sys:String>
+    <sys:String x:Key="Str_WheelGroup" xml:space="preserve">マウスホイールで音声を選択</sys:String>
+    <sys:String x:Key="Str_WheelWithModifier" xml:space="preserve">修飾キーを押している間だけ</sys:String>
+    <sys:String x:Key="Str_WheelAlways" xml:space="preserve">常に（ゲームのホイール操作でも切り替わります）</sys:String>
+    <sys:String x:Key="Str_WheelDisabled" xml:space="preserve">使わない</sys:String>
+    <sys:String x:Key="Str_ModifierLabel" xml:space="preserve">修飾キー:</sys:String>
+    <sys:String x:Key="Str_ModifierTip" xml:space="preserve">このキー（複数可）を押している間だけホイールで音声が切り替わります</sys:String>
+    <sys:String x:Key="Str_ShowOverlay" xml:space="preserve">切り替え時に画面に音声名を表示する</sys:String>
+    <sys:String x:Key="Str_OtherGroup" xml:space="preserve">その他</sys:String>
+    <sys:String x:Key="Str_MinimizeToTray" xml:space="preserve">トレイに最小化</sys:String>
+    <sys:String x:Key="Str_Language" xml:space="preserve">言語</sys:String>
+    <sys:String x:Key="Str_PresetsGroup" xml:space="preserve">プリセット</sys:String>
+    <sys:String x:Key="Str_CopySoundsRight" xml:space="preserve">選択したサウンドを左から右へコピー</sys:String>
+    <sys:String x:Key="Str_CopySoundsLeft" xml:space="preserve">選択したサウンドを右から左へコピー</sys:String>
+    <sys:String x:Key="Str_RemovePreset" xml:space="preserve">プリセットを削除</sys:String>
+    <sys:String x:Key="Str_AddPreset" xml:space="preserve">プリセットを追加</sys:String>
+    <sys:String x:Key="Str_CopyPreset" xml:space="preserve">プリセットを複製</sys:String>
+    <sys:String x:Key="Str_OverlapGroup" xml:space="preserve">重ねて再生</sys:String>
+    <sys:String x:Key="Str_OverlapSounds" xml:space="preserve">サウンドを重ねて再生する</sys:String>
+    <sys:String x:Key="Str_OutputDevices" xml:space="preserve">出力デバイス</sys:String>
+    <sys:String x:Key="Str_FirstDevice" xml:space="preserve">1つ目:</sys:String>
+    <sys:String x:Key="Str_SecondDevice" xml:space="preserve">2つ目:</sys:String>
+    <sys:String x:Key="Str_NameLabel" xml:space="preserve">名前:</sys:String>
+    <sys:String x:Key="Str_FilesLabel" xml:space="preserve">ファイル:</sys:String>
+    <sys:String x:Key="Str_KeysLabel" xml:space="preserve">キー:</sys:String>
+    <sys:String x:Key="Str_VolumeLabel" xml:space="preserve">音量:</sys:String>
+    <sys:String x:Key="Str_LoopLabel" xml:space="preserve">ループ:</sys:String>
+    <sys:String x:Key="Str_AppliesNextPlay" xml:space="preserve">次にこのサウンドを再生したときから反映されます</sys:String>
+    <sys:String x:Key="Str_SoundWindowTitle" xml:space="preserve">サウンド</sys:String>
+    <sys:String x:Key="Str_AboutTitle" xml:space="preserve">バージョン情報</sys:String>
+    <sys:String x:Key="Str_BindPrompt" xml:space="preserve">割り当てるキーを押してください。</sys:String>
+    <sys:String x:Key="Str_Cancel" xml:space="preserve">キャンセル</sys:String>
+    <sys:String x:Key="Str_Clear" xml:space="preserve">クリア</sys:String>
+    <sys:String x:Key="Str_TrayOpen" xml:space="preserve">開く</sys:String>
+    <sys:String x:Key="Str_TrayExit" xml:space="preserve">終了</sys:String>
+    <sys:String x:Key="Str_NotAdminMessage" xml:space="preserve">DCSBは管理者として実行されていません。&#x0a;他のアプリを操作中でもキー割り当てが効いているなら問題ありません。&#x0a;他のアプリを操作中にキー割り当てが効かなくなる場合は、DCSBを管理者として実行する必要があります。&#x0a;&#x0a;今すぐ管理者としてDCSBを再起動しますか？</sys:String>
+    <sys:String x:Key="Str_NoSoundFilesFound" xml:space="preserve">対応している音声ファイルが見つかりませんでした。&#x0a;(wma, mp3, wav, ogg, m4a, aiff, flac)</sys:String>
+    <sys:String x:Key="Str_ChooseSoundFiles" xml:space="preserve">音声ファイルを選択</sys:String>
+    <sys:String x:Key="Str_SoundFilesFilter" xml:space="preserve">音声ファイル</sys:String>
+    <sys:String x:Key="Str_NewPreset" xml:space="preserve">新しいプリセット</sys:String>
+    <sys:String x:Key="Str_LanguageAuto" xml:space="preserve">自動（システムの言語）</sys:String>
+</ResourceDictionary>

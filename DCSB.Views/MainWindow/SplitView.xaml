@@ -23,11 +23,11 @@
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
             
-            <MenuItem Header="Settings" 
+            <MenuItem Header="{DynamicResource Str_Settings}" 
                       Command="{Binding OpenSettingsCommand}" />
             
             <MenuItem Header="{Binding ConfigurationModel.SelectedPreset.Name}" 
-                      HeaderStringFormat="Preset: {0}"
+                      HeaderStringFormat="{DynamicResource Str_PresetFormat}"
                       DisplayMemberPath="Name"
                       ItemsSource="{Binding ConfigurationModel.PresetCollection}">
                 <MenuItem.ItemContainerStyle>
@@ -47,13 +47,13 @@
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
 
-            <MenuItem Header="Not Admin" 
+            <MenuItem Header="{DynamicResource Str_NotAdmin}" 
                       Visibility="{Binding NotAdministrator}" 
                       Command="{Binding OpenNotAdministratorCommand}" />
 
-            <MenuItem Header="Help"
+            <MenuItem Header="{DynamicResource Str_Help}"
                       HorizontalAlignment="Right">
-                <MenuItem Header="About" 
+                <MenuItem Header="{DynamicResource Str_About}" 
                           Command="{Binding OpenAboutCommand}" />
             </MenuItem>
         </Menu>

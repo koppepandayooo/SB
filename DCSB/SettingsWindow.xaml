@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DCSB"
         xmlns:Views="clr-namespace:DCSB.Views.SettingsWindow;assembly=DCSB.Views"
-        Title="Settings"
+        Title="{DynamicResource Str_Settings}"
         Width="450"
         SizeToContent="Height"
         ShowInTaskbar="False"
@@ -12,19 +12,19 @@
         WindowStyle="ToolWindow">
 
     <TabControl>
-        <TabItem Header="Keyboard / Mouse">
+        <TabItem Header="{DynamicResource Str_TabKeyboardMouse}">
             <Views:KeyboardView />
         </TabItem>
 
-        <TabItem Header="Sound">
+        <TabItem Header="{DynamicResource Str_TabSound}">
             <Views:SoundView />
         </TabItem>
 
-        <TabItem Header="Presets">
+        <TabItem Header="{DynamicResource Str_TabPresets}">
             <Views:PresetConfigurationView DataContext="{Binding PresetConfigurationViewModel}" />
         </TabItem>
 
-        <TabItem Header="Other">
+        <TabItem Header="{DynamicResource Str_TabOther}">
             <Views:OtherView />
         </TabItem>
     </TabControl>

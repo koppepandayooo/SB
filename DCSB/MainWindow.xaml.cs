@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
+using DCSB.Utils;
 using DCSB.ViewModels;
 
 namespace DCSB
@@ -29,8 +30,13 @@ namespace DCSB
                 icon = new Icon(stream);
             }
 
-            MenuItem open = new MenuItem("Open", (sender, e) => Open());
-            MenuItem exit = new MenuItem("Exit", (sender, e) => Close());
+            MenuItem open = new MenuItem(UiLanguage.Get("Str_TrayOpen"), (sender, e) => Open());
+            MenuItem exit = new MenuItem(UiLanguage.Get("Str_TrayExit"), (sender, e) => Close());
+            UiLanguage.LanguageChanged += () =>
+            {
+                open.Text = UiLanguage.Get("Str_TrayOpen");
+                exit.Text = UiLanguage.Get("Str_TrayExit");
+            };
 
             notifyIcon = new NotifyIcon
             {

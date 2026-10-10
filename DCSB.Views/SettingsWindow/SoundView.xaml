@@ -29,11 +29,11 @@
     
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <GroupBox Header="Overlap">
-                <CheckBox Margin="5" IsChecked="{Binding Overlap}">Overlap sounds</CheckBox>
+            <GroupBox Header="{DynamicResource Str_OverlapGroup}">
+                <CheckBox Margin="5" IsChecked="{Binding Overlap}" Content="{DynamicResource Str_OverlapSounds}" />
             </GroupBox>
             
-            <GroupBox Header="Output Devices">
+            <GroupBox Header="{DynamicResource Str_OutputDevices}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -47,7 +47,7 @@
                     </Grid.RowDefinitions>
                     
                     <Label Grid.Column="0"
-                           Grid.Row="0">First:</Label>
+                           Grid.Row="0" Content="{DynamicResource Str_FirstDevice}" />
                     <ComboBox Grid.Column="1"
                               Grid.Row="0"
                               Margin="3"
@@ -65,11 +65,11 @@
                             <Controls:IconButton.Style>
                                 <Style TargetType="{x:Type Controls:IconButton}">
                                     <Style.Setters>
-                                        <Setter Property="ToolTip" Value="Mute" />
+                                        <Setter Property="ToolTip" Value="{DynamicResource Str_Mute}" />
                                     </Style.Setters>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Value, ElementName=PrimaryVolumeSlider}" Value="0">
-                                            <Setter Property="ToolTip" Value="Unmute" />
+                                            <Setter Property="ToolTip" Value="{DynamicResource Str_Unmute}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -85,7 +85,7 @@
                     </DockPanel>
 
                     <Label Grid.Column="0" 
-                           Grid.Row="2">Second:</Label>
+                           Grid.Row="2" Content="{DynamicResource Str_SecondDevice}" />
                     <ComboBox Grid.Column="1" 
                               Grid.Row="2"
                               Margin="3"
@@ -102,11 +102,11 @@
                             <Controls:IconButton.Style>
                                 <Style TargetType="{x:Type Controls:IconButton}">
                                     <Style.Setters>
-                                        <Setter Property="ToolTip" Value="Mute" />
+                                        <Setter Property="ToolTip" Value="{DynamicResource Str_Mute}" />
                                     </Style.Setters>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Value, ElementName=SecondaryVolumeSlider}" Value="0">
-                                            <Setter Property="ToolTip" Value="Unmute" />
+                                            <Setter Property="ToolTip" Value="{DynamicResource Str_Unmute}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

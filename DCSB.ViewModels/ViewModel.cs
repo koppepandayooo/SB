@@ -38,7 +38,7 @@ namespace DCSB.ViewModels
             _applicationStateModel = new ApplicationStateModel();
             _configurationManager = new ConfigurationManager();
             _configurationModel = _configurationManager.Load();
-            if (_configurationModel.PresetCollection.Count == 0) _configurationModel.PresetCollection.Add(new Preset() { Name = "New Preset" } );
+            if (_configurationModel.PresetCollection.Count == 0) _configurationModel.PresetCollection.Add(new Preset() { Name = UiLanguage.Get("Str_NewPreset") } );
             _openFileManager = new OpenFileManager();
             _soundManager = new SoundManager(_configurationModel);
             _shortcutManager = new ShortcutManager(_applicationStateModel, _configurationModel, _soundManager);
@@ -59,6 +59,8 @@ namespace DCSB.ViewModels
                     _configurationModel.SoundShortcuts.WheelModifier.Keys.Add(VKey.MENU);
                 _configurationModel.WheelDefaultsApplied = true;
             }
+
+            UiLanguage.Apply(_configurationModel.Language);
 
             _shortcutManager.SelectionChangedByWheel += sound => SelectionChangedByWheel?.Invoke(sound);
         }
@@ -139,6 +141,17 @@ namespace DCSB.ViewModels
                 _configurationModel.Overlap = value;
                 _soundManager.Overlap = _configurationModel.Overlap;
                 RaisePropertyChanged("Overlap");
+            }
+        }
+
+        public string Language
+        {
+            get { return _configurationModel.Language; }
+            set
+            {
+                _configurationModel.Language = value;
+                UiLanguage.Apply(value);
+                RaisePropertyChanged("Language");
             }
         }
 
@@ -242,11 +255,8 @@ namespace DCSB.ViewModels
         }
         private void OpenNotAdministrator()
         {
-            var result = MessageBox.Show("DCSB is not running as an administrator.\n" +
-                "This is fine as long as keybinds work when other app is focused.\n" +
-                "If you focus other app and keybins stop working, you'll need to run DCSB as admin.\n\n" +
-                "Restart DCSB and run it as admin now?", 
-                "Not Admin",
+            var result = MessageBox.Show(UiLanguage.Get("Str_NotAdminMessage"),
+                UiLanguage.Get("Str_NotAdmin"),
                 MessageBoxButton.YesNo);
 
             if (result == MessageBoxResult.Yes)

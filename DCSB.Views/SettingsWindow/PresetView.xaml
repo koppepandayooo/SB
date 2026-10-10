@@ -27,17 +27,17 @@
             <DockPanel>
                 <Controls:IconButton DockPanel.Dock="Right" 
                                      Margin="2" 
-                                     ToolTip="Remove Preset"
+                                     ToolTip="{DynamicResource Str_RemovePreset}"
                                      Content="{StaticResource RemoveIcon}" 
                                      Command="{Binding RemovePresetCommand}" />
                 <Controls:IconButton DockPanel.Dock="Right" 
                                      Margin="2" 
-                                     ToolTip="Add Preset"
+                                     ToolTip="{DynamicResource Str_AddPreset}"
                                      Content="{StaticResource AddIcon}"
                                      Command="{Binding AddPresetCommand}" />
                 <Controls:IconButton DockPanel.Dock="Right" 
                                      Margin="2" 
-                                     ToolTip="Copy Preset"
+                                     ToolTip="{DynamicResource Str_CopyPreset}"
                                      Content="{StaticResource CopyIcon}"
                                      Command="{Binding ClonePresetCommand}" />
                 <TextBox Name="NameField"
@@ -65,16 +65,16 @@
 
             <ListView.Resources>
                 <ContextMenu x:Key="RowMenu" DataContext="{Binding}">
-                    <MenuItem Header="Edit" 
+                    <MenuItem Header="{DynamicResource Str_Edit}" 
                               Command="{Binding DataContext.OpenSoundCommand, RelativeSource={RelativeSource AncestorType=ListView}}" />
-                    <MenuItem Header="Remove" 
+                    <MenuItem Header="{DynamicResource Str_Remove}" 
                               Command="{Binding DataContext.RemoveSoundsCommand, RelativeSource={RelativeSource AncestorType=ListView}}" />
                 </ContextMenu>
             </ListView.Resources>
 
             <ListView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Add" 
+                    <MenuItem Header="{DynamicResource Str_Add}" 
                               Command="{Binding AddSoundCommand}"/>
                 </ContextMenu>
             </ListView.ContextMenu>

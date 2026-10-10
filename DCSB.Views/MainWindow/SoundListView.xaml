@@ -26,10 +26,10 @@
                     <Style TargetType="{x:Type ContentControl}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="true">
-                                <Setter Property="Content" Value="Sounds" />
+                                <Setter Property="Content" Value="{DynamicResource Str_Sounds}" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="false">
-                                <Setter Property="Content" Value="Sounds (Disabled)" />
+                                <Setter Property="Content" Value="{DynamicResource Str_Sounds}" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -54,11 +54,11 @@
                 <Controls:IconButton.Style>
                     <Style TargetType="{x:Type Controls:IconButton}">
                         <Style.Setters>
-                            <Setter Property="ToolTip" Value="Mute" />
+                            <Setter Property="ToolTip" Value="{DynamicResource Str_Mute}" />
                         </Style.Setters>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Value, ElementName=VolumeSlider}" Value="0">
-                                <Setter Property="ToolTip" Value="Unmute" />
+                                <Setter Property="ToolTip" Value="{DynamicResource Str_Unmute}" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -73,27 +73,27 @@
                                  Content="{StaticResource AddIcon}"
                                  Margin="2"
                                  Command="{Binding AddSoundCommand}"
-                                 ToolTip="Add Sound" />
+                                 ToolTip="{DynamicResource Str_AddSound}" />
             <Controls:IconButton DockPanel.Dock="Left" 
                                  Content="{StaticResource RemoveIcon}" 
                                  Margin="2"
                                  Command="{Binding RemoveSoundCommand}"
-                                 ToolTip="Remove Sound" />
+                                 ToolTip="{DynamicResource Str_RemoveSound}" />
             <Controls:IconButton DockPanel.Dock="Right" 
                                  Content="{StaticResource PlayIcon}" 
                                  Margin="2"
                                  Command="{Binding ContinueCommand}"
-                                 ToolTip="Play" />
+                                 ToolTip="{DynamicResource Str_Play}" />
             <Controls:IconButton DockPanel.Dock="Right" 
                                  Content="{StaticResource PauseIcon}" 
                                  Margin="2"
                                  Command="{Binding PauseCommand}"
-                                 ToolTip="Pause" />
+                                 ToolTip="{DynamicResource Str_Pause}" />
             <Controls:IconButton DockPanel.Dock="Right" 
                                  Content="{StaticResource StopIcon}" 
                                  Margin="2"
                                  Command="{Binding StopCommand}"
-                                 ToolTip="Stop" />
+                                 ToolTip="{DynamicResource Str_Stop}" />
             <StackPanel />
         </DockPanel>
 
@@ -113,7 +113,7 @@
 
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Add" 
+                    <MenuItem Header="{DynamicResource Str_Add}" 
                               Command="{Binding AddSoundCommand}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
@@ -123,9 +123,9 @@
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{x:Static SystemColors.HighlightColor}" />
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="{x:Static SystemColors.HighlightTextColor}" />
                 <ContextMenu x:Key="RowMenu" DataContext="{Binding}">
-                    <MenuItem Header="Edit" 
+                    <MenuItem Header="{DynamicResource Str_Edit}" 
                               Command="{Binding DataContext.OpenSoundCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
-                    <MenuItem Header="Remove" 
+                    <MenuItem Header="{DynamicResource Str_Remove}" 
                               Command="{Binding DataContext.RemoveSoundCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                 </ContextMenu>
             </DataGrid.Resources>
@@ -143,10 +143,21 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" 
                                     IsReadOnly="True" 
-                                    Binding="{Binding Name}" />
+                                    Binding="{Binding Name}" >
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{DynamicResource Str_Name}" />
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
                 <DataGridTemplateColumn Header="Keys"
                                         IsReadOnly="True"
                                         Width="*">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{DynamicResource Str_Keys}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DockPanel>
@@ -168,7 +179,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <TextBlock Text="ここに音声ファイル（複数可）やフォルダをドラッグ＆ドロップ"
+        <TextBlock Text="{DynamicResource Str_DropHint}"
                    TextWrapping="Wrap"
                    TextAlignment="Center"
                    HorizontalAlignment="Center"

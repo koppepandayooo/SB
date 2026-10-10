@@ -16,7 +16,7 @@
     
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <GroupBox Header="Presets">
+            <GroupBox Header="{DynamicResource Str_TabPresets}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -39,12 +39,12 @@
                                     VerticalAlignment="Center">
                             <Controls:IconButton Height="20"
                                              Width="20"
-                                             ToolTip="Copy selected Sounds from left to right"
+                                             ToolTip="{DynamicResource Str_CopySoundsRight}"
                                              Content="{StaticResource RightArrowIcon}" 
                                              Command="{Binding CopySoundsRightCommand}" />
                             <Controls:IconButton Height="20"
                                              Width="20"
-                                             ToolTip="Copy selected Sounds from right to left"
+                                             ToolTip="{DynamicResource Str_CopySoundsLeft}"
                                              Content="{StaticResource LeftArrowIcon}" 
                                              Command="{Binding CopySoundsLeftCommand}" />
                         </StackPanel>

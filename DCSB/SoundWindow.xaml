@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DCSB"
         xmlns:Views="clr-namespace:DCSB.Views;assembly=DCSB.Views"
         mc:Ignorable="d"
-        Title="Sound"
+        Title="{DynamicResource Str_TabSound}"
         SizeToContent="WidthAndHeight"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"

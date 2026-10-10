@@ -116,6 +116,17 @@ namespace DCSB.Models
             }
         }
 
+        private string _language = "auto";
+        public string Language
+        {
+            get { return _language; }
+            set
+            {
+                _language = value;
+                RaisePropertyChanged("Language");
+            }
+        }
+
         private bool _showSelectionOverlay;
         public bool ShowSelectionOverlay
         {

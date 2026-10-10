@@ -17,8 +17,17 @@
     
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <GroupBox Header="Other">
-                <CheckBox IsChecked="{Binding ConfigurationModel.MinimizeToTray}">Minimize to tray</CheckBox>
+            <GroupBox Header="{DynamicResource Str_Language}">
+                <Controls:RadioButtonList SelectedValue="{Binding Language}"
+                                          SelectedValuePath="Tag">
+                    <ListBoxItem Tag="auto" Content="{DynamicResource Str_LanguageAuto}" />
+                    <ListBoxItem Tag="en">English</ListBoxItem>
+                    <ListBoxItem Tag="ja">日本語</ListBoxItem>
+                </Controls:RadioButtonList>
+            </GroupBox>
+
+            <GroupBox Header="{DynamicResource Str_TabOther}">
+                <CheckBox IsChecked="{Binding ConfigurationModel.MinimizeToTray}" Content="{DynamicResource Str_MinimizeToTray}" />
             </GroupBox>
         </StackPanel>
     </ScrollViewer>

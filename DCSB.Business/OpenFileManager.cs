@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using DCSB.Utils;
+using Microsoft.Win32;
 
 namespace DCSB.Business
 {
@@ -10,8 +11,8 @@ namespace DCSB.Business
         {
             OpenFileDialog fileDialog = new OpenFileDialog
             {
-                Title = "Choose sound file/s",
-                Filter = "sound files (*.wma; *.mp3; *.wav; *.ogg; *.m4a; *.aiff; *.flac)|*.wma;*.mp3;*.wav;*.ogg;*.m4a;*.aiff;*.flac",
+                Title = UiLanguage.Get("Str_ChooseSoundFiles"),
+                Filter = UiLanguage.Get("Str_SoundFilesFilter") + " (*.wma; *.mp3; *.wav; *.ogg; *.m4a; *.aiff; *.flac)|*.wma;*.mp3;*.wav;*.ogg;*.m4a;*.aiff;*.flac",
                 AddExtension = true,
                 RestoreDirectory = true,
                 Multiselect = true

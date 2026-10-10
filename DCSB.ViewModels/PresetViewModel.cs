@@ -1,4 +1,5 @@
-﻿using DCSB.Models;
+﻿using DCSB.Utils;
+using DCSB.Models;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace DCSB.ViewModels
         }
         private void AddPreset()
         {
-            Preset preset = new Preset() { Name = "New Preset" };
+            Preset preset = new Preset() { Name = UiLanguage.Get("Str_NewPreset") };
             _configurationModel.PresetCollection.Add(preset);
             SelectedPreset = preset;
         }
