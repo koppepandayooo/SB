@@ -1,4 +1,4 @@
-!define File "..\DCSB\bin\Release\DCSB.exe"
+!define File "..\SB\bin\Release\SB.exe"
 
 OutFile "ExtractVersionInfo.exe"
 SilentInstall silent

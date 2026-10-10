@@ -1,43 +1,33 @@
-# Deathcounter and Soundboard
+# SB
 
-Deathcounter and Soundboard allows you to create keyboard shortcuts to trigger sound effects and keep count of something (for example deaths in game). Key shortcuts are recognized even if application is not focused.
+SB is a small soundboard for Windows. It plays sound effects from keyboard shortcuts, the mouse wheel and
+mouse buttons, even while another application (for example a game) is focused.
+
+It is a modified version of [Deathcounter and Soundboard](https://github.com/Kalejin/DCSB) by Kalejin
+(GPLv3). The death counter has been removed, and the app was extended and renamed.
 
 ![Application screenshot](screenshot.png?raw=true "Main Window")
 
-## For each counter you can set:
-- *Name* - to easily identify counters
-- *Path to text file* - file where current count is stored and can be used to display it on stream
-- *Count*
-- *Increment* - number that is added/subtracted
-- *Format* - allows you to add custom text to accompany count number
+## Features
+- **Add sounds by drag and drop** - drop audio files (several at once) or folders on the window; one sound per file.
+- **Select a sound with the mouse wheel** - either always, or only while a modifier key (default: Alt) is held.
+  The selected sound's name is shown briefly on screen.
+- **Play the selected sound** with one key or mouse button (default: middle mouse button).
+- Mouse middle/side buttons can be bound like any key, also to individual sounds.
+- Per sound: name, one or more files (a random one is played), key or key combination, volume, loop.
+- Presets to switch between lists of sounds, even with a keyboard shortcut.
+- Pause / continue / stop shortcuts, overlap sounds, one or two output devices, minimize to tray.
+- English and Japanese UI (Settings > Other > Language).
 
-## For each sound you can set:
--	*Name* - to easily identify different sounds
--	*Path to one or more sound files*, random one will be played any time you hit specified key. Supported file formats are: wma, mp3, wav, ogg, m4a, aiff, and flac
--	*Key or key combination* - to play this sound
--	*Volume* - for this sound
--	*Loop* - whether or not to loop this sound
+Supported audio formats: wma, mp3, wav, ogg, m4a, aiff, flac.
 
-## Presets
-You can create Presets to quickly switch between lists of counters and sounds for different situations, even with keyboard shortcut.
+## Building
+```
+dotnet build SB/SB.csproj -c Release
+```
+The result is `SB/bin/Release/SB.exe`.
 
-## Application allows you to set some more keyboard shortcut:
--	Select next counter
--	Select previous counter
--	Increment counter
--	Decrement counter
--	Reset counter
--	Pause all playing sounds
--	Continue playing sound
--	Stop all playing sounds
-
-## Additional settings:
--	Overlap sounds
--	Select one or two specific sound output devices
--	Enable/disable counters or sounds
--	Display/hide counters or sounds
--	Minimize to tray
-
-## Please read:
-If you come across any bug, something stops working or the program crashes please create issue here. Include as much information as you can provide (any error messages, what stopped working, what were you doing when it happened, what version you are using...).
-Usually restarting the program/running it as an administrator helps.
+## Notes
+- Settings are stored in `C:\ProgramData\SB\config.xml`. On first start, settings of the original DCSB
+  (`C:\ProgramData\DCSB`) are copied over.
+- If key bindings stop working while another application is focused, run SB as administrator.

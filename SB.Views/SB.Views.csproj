@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1" />
+    <PackageReference Include="CommonServiceLocator" Version="2.0.3" />
+    <ProjectReference Include="..\SB.Converters\SB.Converters.csproj" />
+    <ProjectReference Include="..\SB.Controls\SB.Controls.csproj" />
+    <ProjectReference Include="..\SB.Interactivity\SB.Interactivity.csproj" />
+    <ProjectReference Include="..\SB.Utils\SB.Utils.csproj" />
+    <ProjectReference Include="..\SB.ViewModels\SB.ViewModels.csproj" />
+  </ItemGroup>
+</Project>

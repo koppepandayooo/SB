@@ -3,18 +3,18 @@
 	!include "App-Version.txt"
 	!include "MUI.nsh"
 	!include "FileFunc.nsh"
-	Name "Deathcounter and Soundboard, Version ${Version}"
-	OutFile "..\Installers\DCSB_${Version}.exe"
+	Name "SB, Version ${Version}"
+	OutFile "..\Installers\SB_${Version}.exe"
  
 # define installation directory
-	InstallDir "$PROGRAMFILES\Deathcounter and Soundboard"
-	InstallDirRegKey HKLM Software\DCSB InstallLocation
+	InstallDir "$PROGRAMFILES\SB"
+	InstallDirRegKey HKLM Software\SB InstallLocation
  
 # for removing Start Menu shortcut in Windows 7
 	RequestExecutionLevel admin
 
 # define icon
-	!define MUI_ICON "..\DCSB\icon.ico"
+	!define MUI_ICON "..\SB\icon.ico"
 
 # install pages
 	!insertmacro MUI_PAGE_WELCOME
@@ -22,9 +22,9 @@
 	!insertmacro MUI_PAGE_INSTFILES
 		# These indented statements modify settings for MUI_PAGE_FINISH
 		!define MUI_FINISHPAGE_NOAUTOCLOSE
-		!define MUI_FINISHPAGE_RUN "$INSTDIR\DCSB.exe"
+		!define MUI_FINISHPAGE_RUN "$INSTDIR\SB.exe"
 		!define MUI_FINISHPAGE_RUN_CHECKED
-		!define MUI_FINISHPAGE_RUN_TEXT "Start Deathcounter and Soundboard"
+		!define MUI_FINISHPAGE_RUN_TEXT "Start SB"
 	!insertmacro MUI_PAGE_FINISH
 
 # uninstall pages
@@ -48,51 +48,51 @@ Section
     WriteUninstaller "uninstall.exe"
 
     # install app files
-    File "..\DCSB\bin\Release\GalaSoft.MvvmLight.dll"
-    File "..\DCSB\bin\Release\GalaSoft.MvvmLight.Extras.dll"
-    File "..\DCSB\bin\Release\GalaSoft.MvvmLight.Platform.dll"
-    File "..\DCSB\bin\Release\DCSB.exe"
-    File "..\DCSB\bin\Release\DCSB.Business.dll"
-    File "..\DCSB\bin\Release\DCSB.Controls.dll"
-    File "..\DCSB\bin\Release\DCSB.Converters.dll"
-    File "..\DCSB\bin\Release\DCSB.Icons.dll"
-    File "..\DCSB\bin\Release\DCSB.Input.dll"
-    File "..\DCSB\bin\Release\DCSB.Interactivity.dll"
-    File "..\DCSB\bin\Release\DCSB.Models.dll"
-    File "..\DCSB\bin\Release\DCSB.SoundPlayer.dll"
-    File "..\DCSB\bin\Release\DCSB.Utils.dll"
-    File "..\DCSB\bin\Release\DCSB.ViewModels.dll"
-    File "..\DCSB\bin\Release\DCSB.Views.dll"
-    File "..\DCSB\bin\Release\NAudio.dll"
-    File "..\DCSB\bin\Release\NAudio.Vorbis.dll"
-    File "..\DCSB\bin\Release\NVorbis.dll"
-    File "..\DCSB\bin\Release\Octokit.dll"
-    File "..\DCSB\bin\Release\System.Windows.Interactivity.dll"
+    File "..\SB\bin\Release\GalaSoft.MvvmLight.dll"
+    File "..\SB\bin\Release\GalaSoft.MvvmLight.Extras.dll"
+    File "..\SB\bin\Release\GalaSoft.MvvmLight.Platform.dll"
+    File "..\SB\bin\Release\SB.exe"
+    File "..\SB\bin\Release\SB.Business.dll"
+    File "..\SB\bin\Release\SB.Controls.dll"
+    File "..\SB\bin\Release\SB.Converters.dll"
+    File "..\SB\bin\Release\SB.Icons.dll"
+    File "..\SB\bin\Release\SB.Input.dll"
+    File "..\SB\bin\Release\SB.Interactivity.dll"
+    File "..\SB\bin\Release\SB.Models.dll"
+    File "..\SB\bin\Release\SB.SoundPlayer.dll"
+    File "..\SB\bin\Release\SB.Utils.dll"
+    File "..\SB\bin\Release\SB.ViewModels.dll"
+    File "..\SB\bin\Release\SB.Views.dll"
+    File "..\SB\bin\Release\NAudio.dll"
+    File "..\SB\bin\Release\NAudio.Vorbis.dll"
+    File "..\SB\bin\Release\NVorbis.dll"
+    File "..\SB\bin\Release\Octokit.dll"
+    File "..\SB\bin\Release\System.Windows.Interactivity.dll"
  
     # create a shortcut named "new shortcut" in the start menu programs directory
     # point the new shortcut at the program uninstaller
-    CreateDirectory "$SMPROGRAMS\Deathcounter and Soundboard"
-    CreateShortCut "$SMPROGRAMS\Deathcounter and Soundboard\uninstall.lnk" "$INSTDIR\uninstall.exe"
-    CreateShortCut "$SMPROGRAMS\Deathcounter and Soundboard\DCSB.lnk" "$INSTDIR\DCSB.exe"
+    CreateDirectory "$SMPROGRAMS\SB"
+    CreateShortCut "$SMPROGRAMS\SB\uninstall.lnk" "$INSTDIR\uninstall.exe"
+    CreateShortCut "$SMPROGRAMS\SB\SB.lnk" "$INSTDIR\SB.exe"
 
     # add application to Add/Remove programs
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCSB" \
-                 "DisplayName" "Deathcounter and Soundboard"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCSB" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SB" \
+                 "DisplayName" "SB"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SB" \
                  "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCSB" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SB" \
                  "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCSB" \
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SB" \
                  "Publisher" "Kalejin"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCSB" \
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SB" \
                  "DisplayVersion" "${Version}"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCSB" \
-                 "DisplayIcon" "$INSTDIR\DCSB.exe"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SB" \
+                 "DisplayIcon" "$INSTDIR\SB.exe"
     ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
     IntFmt $0 "0x%08X" $0
-	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCSB" \
+	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SB" \
                  "EstimatedSize" "$0"
-    WriteRegStr HKLM "Software\DCSB" \
+    WriteRegStr HKLM "Software\SB" \
                  "InstallLocation" "$\"$INSTDIR$\""
 SectionEnd
  
@@ -107,18 +107,18 @@ Section "uninstall"
 	Delete "$INSTDIR\GalaSoft.MvvmLight.dll"
     Delete "$INSTDIR\GalaSoft.MvvmLight.Extras.dll"
     Delete "$INSTDIR\GalaSoft.MvvmLight.Platform.dll"
-    Delete "$INSTDIR\DCSB.exe"
-    Delete "$INSTDIR\DCSB.Business.dll"
-    Delete "$INSTDIR\DCSB.Controls.dll"
-    Delete "$INSTDIR\DCSB.Converters.dll"
-    Delete "$INSTDIR\DCSB.Icons.dll"
-    Delete "$INSTDIR\DCSB.Input.dll"
-    Delete "$INSTDIR\DCSB.Interactivity.dll"
-    Delete "$INSTDIR\DCSB.Models.dll"
-    Delete "$INSTDIR\DCSB.SoundPlayer.dll"
-    Delete "$INSTDIR\DCSB.Utils.dll"
-    Delete "$INSTDIR\DCSB.ViewModels.dll"
-    Delete "$INSTDIR\DCSB.Views.dll"
+    Delete "$INSTDIR\SB.exe"
+    Delete "$INSTDIR\SB.Business.dll"
+    Delete "$INSTDIR\SB.Controls.dll"
+    Delete "$INSTDIR\SB.Converters.dll"
+    Delete "$INSTDIR\SB.Icons.dll"
+    Delete "$INSTDIR\SB.Input.dll"
+    Delete "$INSTDIR\SB.Interactivity.dll"
+    Delete "$INSTDIR\SB.Models.dll"
+    Delete "$INSTDIR\SB.SoundPlayer.dll"
+    Delete "$INSTDIR\SB.Utils.dll"
+    Delete "$INSTDIR\SB.ViewModels.dll"
+    Delete "$INSTDIR\SB.Views.dll"
     Delete "$INSTDIR\NAudio.dll"
     Delete "$INSTDIR\NAudio.Vorbis.dll"
     Delete "$INSTDIR\NVorbis.dll"
@@ -128,14 +128,14 @@ Section "uninstall"
     Call un.DeleteDirIfEmpty
  
     # remove the link from the start menu
-    Delete "$SMPROGRAMS\Deathcounter and Soundboard\uninstall.lnk"
-    Delete "$SMPROGRAMS\Deathcounter and Soundboard\DCSB.lnk"
-    StrCpy $0 "$SMPROGRAMS\Deathcounter and Soundboard"
+    Delete "$SMPROGRAMS\SB\uninstall.lnk"
+    Delete "$SMPROGRAMS\SB\SB.lnk"
+    StrCpy $0 "$SMPROGRAMS\SB"
     Call un.DeleteDirIfEmpty
 
     # remove registry key
-    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCSB"
-    DeleteRegKey HKLM "Software\DCSB"
+    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SB"
+    DeleteRegKey HKLM "Software\SB"
  
 # uninstaller section end
 SectionEnd

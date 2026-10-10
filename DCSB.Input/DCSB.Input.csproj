@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <UseWindowsForms>true</UseWindowsForms>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DCSB.Utils\DCSB.Utils.csproj" />
-  </ItemGroup>
-</Project>

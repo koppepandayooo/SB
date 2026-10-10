@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1" />
+    <PackageReference Include="CommonServiceLocator" Version="2.0.3" />
+    <Resource Include="icon.ico" />
+    <ProjectReference Include="..\SB.Business\SB.Business.csproj" />
+    <ProjectReference Include="..\SB.Converters\SB.Converters.csproj" />
+    <ProjectReference Include="..\SB.Icons\SB.Icons.csproj" />
+    <ProjectReference Include="..\SB.Input\SB.Input.csproj" />
+    <ProjectReference Include="..\SB.Controls\SB.Controls.csproj" />
+    <ProjectReference Include="..\SB.Interactivity\SB.Interactivity.csproj" />
+    <ProjectReference Include="..\SB.Models\SB.Models.csproj" />
+    <ProjectReference Include="..\SB.Utils\SB.Utils.csproj" />
+    <ProjectReference Include="..\SB.ViewModels\SB.ViewModels.csproj" />
+    <ProjectReference Include="..\SB.Views\SB.Views.csproj" />
+  </ItemGroup>
+</Project>

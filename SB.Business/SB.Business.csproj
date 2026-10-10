@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1" />
+    <PackageReference Include="CommonServiceLocator" Version="2.0.3" />
+    <ProjectReference Include="..\SB.Input\SB.Input.csproj" />
+    <ProjectReference Include="..\SB.Models\SB.Models.csproj" />
+    <ProjectReference Include="..\SB.Sound\SB.SoundPlayer.csproj" />
+    <ProjectReference Include="..\SB.Utils\SB.Utils.csproj" />
+  </ItemGroup>
+</Project>
