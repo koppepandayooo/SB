@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
@@ -16,6 +16,18 @@ namespace DCSB.Input
         {
             add { _keyboardDriver.KeyPressed += value; }
             remove { _keyboardDriver.KeyPressed -= value;}
+        }
+
+        public event RawKeyboard.MouseWheelHandler MouseWheel
+        {
+            add { _keyboardDriver.MouseWheel += value; }
+            remove { _keyboardDriver.MouseWheel -= value; }
+        }
+
+        public event RawKeyboard.MouseButtonHandler MouseButton
+        {
+            add { _keyboardDriver.MouseButton += value; }
+            remove { _keyboardDriver.MouseButton -= value; }
         }
 
         public int NumberOfKeyboards

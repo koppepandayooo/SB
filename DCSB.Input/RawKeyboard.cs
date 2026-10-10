@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.ComponentModel;
@@ -12,6 +12,10 @@ namespace DCSB.Input
 		private readonly Dictionary<IntPtr,KeyPressEvent> _deviceList = new Dictionary<IntPtr,KeyPressEvent>();
 		public delegate void DeviceEventHandler(object sender, InputEventArg e);
 		public event DeviceEventHandler KeyPressed;
+		public delegate void MouseWheelHandler(int delta);
+		public delegate void MouseButtonHandler(DCSB.Utils.VKey button, bool down);
+		public event MouseWheelHandler MouseWheel;
+		public event MouseButtonHandler MouseButton;
 		readonly object _padLock = new object();
 		public int NumberOfKeyboards { get; private set; }
 		static InputData _rawBuffer;
@@ -20,12 +24,19 @@ namespace DCSB.Input
 
 		public RawKeyboard(IntPtr hwnd)
 		{
-			var rid = new RawInputDevice[1];
+			var rid = new RawInputDevice[2];
 
 			rid[0].UsagePage = HidUsagePage.GENERIC;       
 			rid[0].Usage = HidUsage.Keyboard;              
 			rid[0].Flags = RawInputDeviceFlags.INPUTSINK;
 			rid[0].Target = hwnd;
+
+			// Mouse wheel and buttons. Raw input is delivered asynchronously, so unlike a
+			// low-level mouse hook it can never delay the cursor.
+			rid[1].UsagePage = HidUsagePage.GENERIC;
+			rid[1].Usage = HidUsage.Mouse;
+			rid[1].Flags = RawInputDeviceFlags.INPUTSINK;
+			rid[1].Target = hwnd;
 
 			if(!Win32.RegisterRawInputDevices(rid, (uint)rid.Length, (uint)Marshal.SizeOf(rid[0])))
 			{
@@ -131,6 +142,12 @@ namespace DCSB.Input
 				return false;
 			}
 
+			if (_rawBuffer.header.dwType == RIM_TYPEMOUSE)
+			{
+				ProcessMouse(_rawBuffer.data.mouse);
+				return true;
+			}
+
 			int virtualKey = _rawBuffer.data.keyboard.VKey;
 			int makeCode = _rawBuffer.data.keyboard.Makecode;
 			int flags = _rawBuffer.data.keyboard.Flags;
@@ -167,6 +184,29 @@ namespace DCSB.Input
 			}
 
 			return true;
+		}
+
+		private const uint RIM_TYPEMOUSE = 0;
+		private const ushort RI_MOUSE_MIDDLE_BUTTON_DOWN = 0x0010;
+		private const ushort RI_MOUSE_MIDDLE_BUTTON_UP = 0x0020;
+		private const ushort RI_MOUSE_BUTTON_4_DOWN = 0x0040;
+		private const ushort RI_MOUSE_BUTTON_4_UP = 0x0080;
+		private const ushort RI_MOUSE_BUTTON_5_DOWN = 0x0100;
+		private const ushort RI_MOUSE_BUTTON_5_UP = 0x0200;
+		private const ushort RI_MOUSE_WHEEL = 0x0400;
+
+		private void ProcessMouse(Rawmouse mouse)
+		{
+			ushort flags = mouse.usButtonFlags;
+			if (flags == 0) return; // plain movement
+
+			if ((flags & RI_MOUSE_MIDDLE_BUTTON_DOWN) != 0) MouseButton?.Invoke(DCSB.Utils.VKey.MBUTTON, true);
+			if ((flags & RI_MOUSE_MIDDLE_BUTTON_UP) != 0) MouseButton?.Invoke(DCSB.Utils.VKey.MBUTTON, false);
+			if ((flags & RI_MOUSE_BUTTON_4_DOWN) != 0) MouseButton?.Invoke(DCSB.Utils.VKey.XBUTTON1, true);
+			if ((flags & RI_MOUSE_BUTTON_4_UP) != 0) MouseButton?.Invoke(DCSB.Utils.VKey.XBUTTON1, false);
+			if ((flags & RI_MOUSE_BUTTON_5_DOWN) != 0) MouseButton?.Invoke(DCSB.Utils.VKey.XBUTTON2, true);
+			if ((flags & RI_MOUSE_BUTTON_5_UP) != 0) MouseButton?.Invoke(DCSB.Utils.VKey.XBUTTON2, false);
+			if ((flags & RI_MOUSE_WHEEL) != 0) MouseWheel?.Invoke((short)mouse.usButtonData);
 		}
 
 		private static int VirtualKeyCorrection(int virtualKey, bool isE0BitSet, int makeCode)
