@@ -55,6 +55,8 @@
                       HorizontalAlignment="Right">
                 <MenuItem Header="{DynamicResource Str_About}" 
                           Command="{Binding OpenAboutCommand}" />
+                <MenuItem Header="{DynamicResource Str_CheckForUpdates}" 
+                          Command="{Binding CheckForUpdatesCommand}" />
             </MenuItem>
         </Menu>
 

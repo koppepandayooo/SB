@@ -10,6 +10,7 @@ using SB.Input;
 using SB.Models;
 using SB.Utils;
 using System.IO;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Security.Principal;
 using System.Diagnostics;
@@ -25,6 +26,7 @@ namespace SB.ViewModels
         private OpenFileManager _openFileManager;
         private ShortcutManager _shortcutManager;
         private SoundManager _soundManager;
+        private UpdateManager _updateManager;
         private KeyboardInput _keyboardInput;
 
         private PresetConfigurationViewModel _presetConfigurationViewModel;
@@ -42,6 +44,7 @@ namespace SB.ViewModels
             _openFileManager = new OpenFileManager();
             _soundManager = new SoundManager(_configurationModel);
             _shortcutManager = new ShortcutManager(_applicationStateModel, _configurationModel, _soundManager);
+            _updateManager = new UpdateManager();
 
             _presetConfigurationViewModel = new PresetConfigurationViewModel(_applicationStateModel, _configurationModel);
 
@@ -61,6 +64,8 @@ namespace SB.ViewModels
             }
 
             UiLanguage.Apply(_configurationModel.Language);
+
+            Task.Run(() => _updateManager.AutoUpdateCheck(Version));
 
             _shortcutManager.SelectionChangedByWheel += sound => SelectionChangedByWheel?.Invoke(sound);
         }
@@ -207,6 +212,15 @@ namespace SB.ViewModels
                     Visibility.Collapsed : 
                     Visibility.Visible;
             }
+        }
+
+        public ICommand CheckForUpdatesCommand
+        {
+            get { return new RelayCommand(CheckForUpdates); }
+        }
+        private async void CheckForUpdates()
+        {
+            await _updateManager.ManualUpdateCheck(Version);
         }
 
         public ICommand PresetSelectedCommand

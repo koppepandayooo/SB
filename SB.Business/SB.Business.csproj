@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageReference Include="MvvmLightLibs" Version="5.4.1" />
     <PackageReference Include="CommonServiceLocator" Version="2.0.3" />
+    <PackageReference Include="Octokit" Version="0.29.0" />
     <ProjectReference Include="..\SB.Input\SB.Input.csproj" />
     <ProjectReference Include="..\SB.Models\SB.Models.csproj" />
     <ProjectReference Include="..\SB.Sound\SB.SoundPlayer.csproj" />

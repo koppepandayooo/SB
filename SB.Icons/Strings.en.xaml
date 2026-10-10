@@ -70,4 +70,10 @@
     <sys:String x:Key="Str_SoundFilesFilter" xml:space="preserve">sound files</sys:String>
     <sys:String x:Key="Str_NewPreset" xml:space="preserve">New Preset</sys:String>
     <sys:String x:Key="Str_LanguageAuto" xml:space="preserve">Auto (system language)</sys:String>
+    <sys:String x:Key="Str_CheckForUpdates" xml:space="preserve">Check for updates</sys:String>
+    <sys:String x:Key="Str_UpdateAvailableTitle" xml:space="preserve">New version {0}</sys:String>
+    <sys:String x:Key="Str_UpdateAvailableMessage" xml:space="preserve">Version {0} is available at {1}.&#x0a;Do you want to open this site?</sys:String>
+    <sys:String x:Key="Str_NoUpdate" xml:space="preserve">No update available.</sys:String>
+    <sys:String x:Key="Str_UpdateCheckFailedTitle" xml:space="preserve">Update check failed</sys:String>
+    <sys:String x:Key="Str_UpdateCheckFailedMessage" xml:space="preserve">{0}&#x0a;Do you want to open GitHub to check manually?</sys:String>
 </ResourceDictionary>
