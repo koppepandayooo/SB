@@ -32,25 +32,9 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="80"/>
                             <RowDefinition />
-                            <RowDefinition />
                         </Grid.RowDefinitions>
 
                         <StackPanel Grid.Row="1"
-                                    Orientation="Vertical"
-                                    VerticalAlignment="Center">
-                            <Controls:IconButton Height="20"
-                                             Width="20"
-                                             ToolTip="Copy selected Counters from left to right"
-                                             Content="{StaticResource RightArrowIcon}" 
-                                             Command="{Binding CopyCountersRightCommand}" />
-                            <Controls:IconButton Height="20"
-                                             Width="20"
-                                             ToolTip="Copy selected Counters from right to left"
-                                             Content="{StaticResource LeftArrowIcon}" 
-                                             Command="{Binding CopyCountersLeftCommand}" />
-                        </StackPanel>
-
-                        <StackPanel Grid.Row="2"
                                     Orientation="Vertical"
                                     VerticalAlignment="Center">
                             <Controls:IconButton Height="20"

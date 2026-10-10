@@ -13,6 +13,9 @@ namespace DCSB.Input
         public event KeyboardHookCallback KeyUp;
         public event KeyboardHookCallback KeyPress;
 
+        public delegate void WheelCallback(int delta, List<VKey> pressedKeys);
+        public event WheelCallback Wheel;
+
         private Dictionary<VKey, VKey> numpadKeys = new Dictionary<VKey, VKey>()
         {
             { VKey.INSERT, VKey.NUMPAD0 },
@@ -30,14 +33,21 @@ namespace DCSB.Input
         private bool shiftNumpadCorrection;
         private Timer shiftNumpadTimer = new Timer();
         private RawInput rawInput;
+        private MouseHook mouseHook;
 
         private List<VKey> pressedKeys = new List<VKey>();
 
         public KeyboardInput(IntPtr handle)
         {
             rawInput = new RawInput(handle);
-            
+
             rawInput.KeyPressed += OnKeyPressed;
+
+            // Middle and side mouse buttons behave like keys, so they can be bound like any other key
+            mouseHook = new MouseHook();
+            mouseHook.ButtonDown += Key_Down;
+            mouseHook.ButtonUp += Key_Up;
+            mouseHook.Wheel += delta => Wheel?.Invoke(delta, pressedKeys);
 
             shiftNumpadTimer.Elapsed += (x, y) => {
                 if (shiftNumpadCorrection)

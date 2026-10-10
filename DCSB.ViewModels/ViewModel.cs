@@ -9,7 +9,8 @@ using DCSB.Business;
 using DCSB.Input;
 using DCSB.Models;
 using DCSB.Utils;
-using System.Threading.Tasks;
+using System.IO;
+using System.Linq;
 using System.Security.Principal;
 using System.Diagnostics;
 
@@ -24,7 +25,6 @@ namespace DCSB.ViewModels
         private OpenFileManager _openFileManager;
         private ShortcutManager _shortcutManager;
         private SoundManager _soundManager;
-        private UpdateManager _updateManager;
         private KeyboardInput _keyboardInput;
 
         private PresetConfigurationViewModel _presetConfigurationViewModel;
@@ -42,22 +42,25 @@ namespace DCSB.ViewModels
             _openFileManager = new OpenFileManager();
             _soundManager = new SoundManager(_configurationModel);
             _shortcutManager = new ShortcutManager(_applicationStateModel, _configurationModel, _soundManager);
-            _updateManager = new UpdateManager();
 
             _presetConfigurationViewModel = new PresetConfigurationViewModel(_applicationStateModel, _configurationModel);
 
             _configurationModel.PropertyChanged += (sender, e) => _configurationManager.Save((ConfigurationModel)sender);
 
-            _configurationModel.CounterShortcuts.Next.Command = NextCounterCommand;
-            _configurationModel.CounterShortcuts.Previous.Command = PreviousCounterCommand;
-            _configurationModel.CounterShortcuts.Increment.Command = IncrementCommand;
-            _configurationModel.CounterShortcuts.Decrement.Command = DecrementCommand;
-            _configurationModel.CounterShortcuts.Reset.Command = ResetCommand;
             _configurationModel.SoundShortcuts.Pause.Command = PauseCommand;
             _configurationModel.SoundShortcuts.Continue.Command = ContinueCommand;
             _configurationModel.SoundShortcuts.Stop.Command = StopCommand;
 
-            Task.Run(() => _updateManager.AutoUpdateCheck(Version));
+            if (!_configurationModel.WheelDefaultsApplied)
+            {
+                if (_configurationModel.SoundShortcuts.PlaySelected.Keys.Count == 0)
+                    _configurationModel.SoundShortcuts.PlaySelected.Keys.Add(VKey.MBUTTON);
+                if (_configurationModel.SoundShortcuts.WheelModifier.Keys.Count == 0)
+                    _configurationModel.SoundShortcuts.WheelModifier.Keys.Add(VKey.MENU);
+                _configurationModel.WheelDefaultsApplied = true;
+            }
+
+            _shortcutManager.SelectionChangedByWheel += sound => SelectionChangedByWheel?.Invoke(sound);
         }
 
         public IntPtr WindowHandle
@@ -68,8 +71,12 @@ namespace DCSB.ViewModels
                 _keyboardInput.KeyUp += _shortcutManager.KeyUp;
                 _keyboardInput.KeyDown += _shortcutManager.KeyDown;
                 _keyboardInput.KeyPress += _shortcutManager.KeyPress;
+                _keyboardInput.Wheel += _shortcutManager.Wheel;
             }
         }
+
+        /// <summary>Raised when the selected sound was changed with the mouse wheel.</summary>
+        public event Action<Sound> SelectionChangedByWheel;
 
         public ApplicationStateModel ApplicationStateModel
         {
@@ -84,26 +91,6 @@ namespace DCSB.ViewModels
         public PresetConfigurationViewModel PresetConfigurationViewModel
         {
             get { return _presetConfigurationViewModel; }
-        }
-
-        public GridLength CountersWidth
-        {
-            get { return new GridLength(_configurationModel.CountersWidth, GridUnitType.Star); }
-            set
-            {
-                _configurationModel.CountersWidth = value.Value;
-                RaisePropertyChanged("CountersWidth");
-            }
-        }
-
-        public GridLength SoundsWidth
-        {
-            get { return new GridLength(_configurationModel.SoundsWidth, GridUnitType.Star); }
-            set
-            {
-                _configurationModel.SoundsWidth = value.Value;
-                RaisePropertyChanged("SoundsWidth");
-            }
         }
 
         public Version Version
@@ -155,17 +142,13 @@ namespace DCSB.ViewModels
             }
         }
 
-        public DisplayOption Enable
+        public WheelMode WheelMode
         {
-            get { return _configurationModel.Enable; }
+            get { return _configurationModel.WheelMode; }
             set
             {
-                _configurationModel.Enable = value;
-                RaisePropertyChanged("Enable");
-                if (_configurationModel.Enable != DisplayOption.Sounds && _configurationModel.Enable != DisplayOption.Both)
-                {
-                    _soundManager.Stop();
-                }
+                _configurationModel.WheelMode = value;
+                RaisePropertyChanged("WheelMode");
             }
         }
 
@@ -213,15 +196,6 @@ namespace DCSB.ViewModels
             }
         }
 
-        public ICommand CheckForUpdatesCommand
-        {
-            get { return new RelayCommand(CheckForUpdates); }
-        }
-        private async void CheckForUpdates()
-        {
-            await _updateManager.ManualUpdateCheck(Version);
-        }
-
         public ICommand PresetSelectedCommand
         {
             get { return new RelayCommand<Preset>(PresetSelected); }
@@ -229,10 +203,6 @@ namespace DCSB.ViewModels
         private void PresetSelected(Preset selectedPreset)
         {
             _configurationModel.SelectedPreset = selectedPreset;
-            foreach (Counter counter in selectedPreset.CounterCollection)
-            {
-                counter.ReadFromFile();
-            }
         }
 
         public ICommand OpenSettingsCommand
@@ -244,22 +214,9 @@ namespace DCSB.ViewModels
             _applicationStateModel.SettingsOpened = true;
         }
 
-        public ICommand OpenCounterCommand
-        {
-            get { return new RelayCommand(OpenCounter, AreCountersEnabled); }
-        }
-        private void OpenCounter()
-        {
-            if (_configurationModel.SelectedPreset.SelectedCounter != null)
-            {
-                _applicationStateModel.ModifiedCounter = _configurationModel.SelectedPreset.SelectedCounter;
-                _applicationStateModel.CounterOpened = true;
-            }
-        }
-
         public ICommand OpenSoundCommand
         {
-            get { return new RelayCommand(OpenSound, AreSoundsEnabled); }
+            get { return new RelayCommand(OpenSound); }
         }
         private void OpenSound()
         {
@@ -301,22 +258,9 @@ namespace DCSB.ViewModels
             }
         }
 
-        public ICommand OpenCounterFileDialogCommand
-        {
-            get { return new RelayCommand(OpenCounterFileDialog, AreCountersEnabled); }
-        }
-        private void OpenCounterFileDialog()
-        {
-            string result = _openFileManager.OpenCounterFile();
-            if (result != null)
-            {
-                _configurationModel.SelectedPreset.SelectedCounter.File = result;
-            }
-        }
-
         public ICommand OpenSoundFileDialogCommand
         {
-            get { return new RelayCommand(OpenSoundFileDialog, AreSoundsEnabled); }
+            get { return new RelayCommand(OpenSoundFileDialog); }
         }
         private void OpenSoundFileDialog()
         {
@@ -331,112 +275,9 @@ namespace DCSB.ViewModels
             }
         }
 
-        public ICommand AddCounterCommand
-        {
-            get { return new RelayCommand(AddCounter, AreCountersEnabled); }
-        }
-        private void AddCounter()
-        {
-            Counter counter = new Counter();
-            _configurationModel.SelectedPreset.CounterCollection.Add(counter);
-            _configurationModel.SelectedPreset.SelectedCounter = counter;
-            _applicationStateModel.ModifiedCounter = counter;
-            _applicationStateModel.CounterOpened = true;
-        }
-
-        public ICommand RemoveCounterCommand
-        {
-            get { return new RelayCommand(RemoveCounter, AreCountersEnabled); }
-        }
-        private void RemoveCounter()
-        {
-            if (_configurationModel.SelectedPreset.SelectedCounter != null)
-            {
-                _configurationModel.SelectedPreset.CounterCollection.Remove(_configurationModel.SelectedPreset.SelectedCounter);
-            }
-        }
-
-        public ICommand IncrementCommand
-        {
-            get { return new RelayCommand(Increment, AreCountersEnabled); }
-        }
-        private void Increment()
-        {
-            if (_configurationModel.SelectedPreset.SelectedCounter != null)
-            {
-                _configurationModel.SelectedPreset.SelectedCounter.Count += _configurationModel.SelectedPreset.SelectedCounter.Increment;
-            }
-        }
-
-        public ICommand DecrementCommand
-        {
-            get { return new RelayCommand(Decrement, AreCountersEnabled); }
-        }
-        private void Decrement()
-        {
-            if (_configurationModel.SelectedPreset.SelectedCounter != null)
-            {
-                _configurationModel.SelectedPreset.SelectedCounter.Count -= _configurationModel.SelectedPreset.SelectedCounter.Increment;
-            }
-        }
-
-        public ICommand ResetCommand
-        {
-            get { return new RelayCommand(Reset, AreCountersEnabled); }
-        }
-        private void Reset()
-        {
-            if (_configurationModel.SelectedPreset.SelectedCounter != null)
-            {
-                _configurationModel.SelectedPreset.SelectedCounter.Count = 0;
-            }
-        }
-
-        public ICommand NextCounterCommand
-        {
-            get { return new RelayCommand(NextCounter, AreCountersEnabled); }
-        }
-        private void NextCounter()
-        {
-            if (_configurationModel.SelectedPreset.SelectedCounter == null )
-            {
-                if (_configurationModel.SelectedPreset.CounterCollection.Count != 0)
-                {
-                    _configurationModel.SelectedPreset.SelectedCounter = _configurationModel.SelectedPreset.CounterCollection[0];
-                }
-            }
-            else
-            {
-                int currentIndex = _configurationModel.SelectedPreset.CounterCollection.IndexOf(_configurationModel.SelectedPreset.SelectedCounter);
-                int nextIndex = (currentIndex + 1) % _configurationModel.SelectedPreset.CounterCollection.Count;
-                _configurationModel.SelectedPreset.SelectedCounter = _configurationModel.SelectedPreset.CounterCollection[nextIndex];
-            }
-        }
-
-        public ICommand PreviousCounterCommand
-        {
-            get { return new RelayCommand(PreviousCounter, AreCountersEnabled); }
-        }
-        private void PreviousCounter()
-        {
-            if (_configurationModel.SelectedPreset.SelectedCounter == null)
-            {
-                if (_configurationModel.SelectedPreset.CounterCollection.Count != 0)
-                {
-                    _configurationModel.SelectedPreset.SelectedCounter = _configurationModel.SelectedPreset.CounterCollection[0];
-                }
-            }
-            else
-            {
-                int currentIndex = _configurationModel.SelectedPreset.CounterCollection.IndexOf(_configurationModel.SelectedPreset.SelectedCounter);
-                int previousIndex = (currentIndex - 1 + _configurationModel.SelectedPreset.CounterCollection.Count) % _configurationModel.SelectedPreset.CounterCollection.Count;
-                _configurationModel.SelectedPreset.SelectedCounter = _configurationModel.SelectedPreset.CounterCollection[previousIndex];
-            }
-        }
-
         public ICommand MuteCommand
         {
-            get { return new RelayCommand(Mute, AreSoundsEnabled); }
+            get { return new RelayCommand(Mute); }
         }
         private void Mute()
         {
@@ -487,7 +328,7 @@ namespace DCSB.ViewModels
 
         public ICommand AddSoundCommand
         {
-            get { return new RelayCommand(AddSound, AreSoundsEnabled); }
+            get { return new RelayCommand(AddSound); }
         }
         private void AddSound()
         {
@@ -498,9 +339,52 @@ namespace DCSB.ViewModels
             _applicationStateModel.SoundOpened = true;
         }
 
+        /// <summary>
+        /// Adds one sound per audio file. Folders are searched recursively.
+        /// Returns the number of sounds added.
+        /// </summary>
+        public int AddSoundFiles(IEnumerable<string> paths)
+        {
+            Sound lastAdded = null;
+            int added = 0;
+            foreach (string file in ExpandSoundFiles(paths))
+            {
+                Sound sound = new Sound() { Name = Path.GetFileNameWithoutExtension(file) };
+                sound.Files.Add(file);
+                _configurationModel.SelectedPreset.SoundCollection.Add(sound);
+                lastAdded = sound;
+                added++;
+            }
+            if (lastAdded != null)
+            {
+                _configurationModel.SelectedPreset.SelectedSound = lastAdded;
+            }
+            return added;
+        }
+
+        private static IEnumerable<string> ExpandSoundFiles(IEnumerable<string> paths)
+        {
+            foreach (string path in paths)
+            {
+                IEnumerable<string> files;
+                if (Directory.Exists(path))
+                    files = Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).OrderBy(x => x, StringComparer.OrdinalIgnoreCase);
+                else if (File.Exists(path))
+                    files = new[] { path };
+                else
+                    continue;
+
+                foreach (string file in files)
+                {
+                    if (OpenFileManager.SoundExtensions.Contains(Path.GetExtension(file).ToLowerInvariant()))
+                        yield return file;
+                }
+            }
+        }
+
         public ICommand RemoveSoundCommand
         {
-            get { return new RelayCommand(RemoveSound, AreSoundsEnabled); }
+            get { return new RelayCommand(RemoveSound); }
         }
         private void RemoveSound()
         {
@@ -509,7 +393,7 @@ namespace DCSB.ViewModels
 
         public ICommand PlayCommand
         {
-            get { return new RelayCommand(Play, AreSoundsEnabled); }
+            get { return new RelayCommand(Play); }
         }
         private void Play()
         {
@@ -521,7 +405,7 @@ namespace DCSB.ViewModels
 
         public ICommand PauseCommand
         {
-            get { return new RelayCommand(Pause, AreSoundsEnabled); }
+            get { return new RelayCommand(Pause); }
         }
         private void Pause()
         {
@@ -530,7 +414,7 @@ namespace DCSB.ViewModels
 
         public ICommand ContinueCommand
         {
-            get { return new RelayCommand(Continue, AreSoundsEnabled); }
+            get { return new RelayCommand(Continue); }
         }
         private void Continue()
         {
@@ -539,7 +423,7 @@ namespace DCSB.ViewModels
 
         public ICommand StopCommand
         {
-            get { return new RelayCommand(Stop, AreSoundsEnabled); }
+            get { return new RelayCommand(Stop); }
         }
         private void Stop()
         {
@@ -584,16 +468,6 @@ namespace DCSB.ViewModels
         private void Closing()
         {
             _configurationManager.Dispose();
-        }
-
-        private bool AreCountersEnabled()
-        {
-            return _configurationModel.Enable == DisplayOption.Counters || _configurationModel.Enable == DisplayOption.Both;
-        }
-
-        private bool AreSoundsEnabled()
-        {
-            return _configurationModel.Enable == DisplayOption.Sounds || _configurationModel.Enable == DisplayOption.Both;
         }
     }
 }

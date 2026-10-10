@@ -11,6 +11,7 @@ namespace DCSB
     public partial class MainWindow : Window
     {
         NotifyIcon notifyIcon;
+        SelectionOverlay selectionOverlay;
 
         public MainWindow()
         {
@@ -18,7 +19,9 @@ namespace DCSB
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            DataContext = new ViewModel();
+            ViewModel viewModel = new ViewModel();
+            DataContext = viewModel;
+            viewModel.SelectionChangedByWheel += ShowSelection;
 
             Icon icon;
             using (Stream stream = System.Windows.Application.GetResourceStream(new Uri("icon.ico", UriKind.Relative)).Stream)
@@ -32,7 +35,7 @@ namespace DCSB
             notifyIcon = new NotifyIcon
             {
                 Icon = icon,
-                Text = "Deathcounter and Soundboard",
+                Text = "DCSB Soundboard",
                 Visible = true,
                 ContextMenu = new ContextMenu(new MenuItem[] { open, exit })
             };
@@ -53,8 +56,40 @@ namespace DCSB
             base.OnStateChanged(e);
         }
 
+        private void ShowSelection(Models.Sound sound)
+        {
+            if (!(DataContext is ViewModel viewModel) || !viewModel.ConfigurationModel.ShowSelectionOverlay)
+                return;
+
+            var sounds = viewModel.ConfigurationModel.SelectedPreset.SoundCollection;
+            if (selectionOverlay == null)
+                selectionOverlay = new SelectionOverlay();
+            selectionOverlay.ShowMessage($"{sounds.IndexOf(sound) + 1}/{sounds.Count}  {sound.Name}");
+        }
+
+        private void WindowDragOver(object sender, System.Windows.DragEventArgs e)
+        {
+            e.Effects = e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop) ? System.Windows.DragDropEffects.Copy : System.Windows.DragDropEffects.None;
+            e.Handled = true;
+        }
+
+        private void WindowDrop(object sender, System.Windows.DragEventArgs e)
+        {
+            if (DataContext is ViewModel viewModel && e.Data.GetData(System.Windows.DataFormats.FileDrop) is string[] paths)
+            {
+                if (viewModel.AddSoundFiles(paths) == 0)
+                {
+                    System.Windows.MessageBox.Show(this, "対応している音声ファイルが見つかりませんでした。\n(wma, mp3, wav, ogg, m4a, aiff, flac)", "DCSB");
+                }
+            }
+            e.Handled = true;
+        }
+
         protected override void OnClosed(EventArgs e)
         {
+            if (selectionOverlay != null)
+                selectionOverlay.Close();
+
             if (notifyIcon != null)
                 notifyIcon.Dispose();
 

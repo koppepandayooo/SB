@@ -20,17 +20,6 @@ namespace DCSB.Models
             }
         }
 
-        private ObservableObjectCollection<Counter> _counterCollection;
-        public ObservableObjectCollection<Counter> CounterCollection
-        {
-            get { return _counterCollection; }
-            set
-            {
-                _counterCollection = value;
-                RaisePropertyChanged("CounterCollection");
-            }
-        }
-
         private ObservableObjectCollection<Sound> _soundCollection;
         public ObservableObjectCollection<Sound> SoundCollection
         {
@@ -53,18 +42,6 @@ namespace DCSB.Models
             }
         }
 
-        private Counter _selectedCounter;
-        [XmlIgnore]
-        public Counter SelectedCounter
-        {
-            get { return _selectedCounter; }
-            set
-            {
-                _selectedCounter = value;
-                RaisePropertyChanged("SelectedCounter");
-            }
-        }
-
         private Sound _selectedSound;
         [XmlIgnore]
         public Sound SelectedSound
@@ -80,12 +57,9 @@ namespace DCSB.Models
         public Preset()
         {
             _keys = new ObservableCollection<VKey>();
-            _counterCollection = new ObservableObjectCollection<Counter>();
             _soundCollection = new ObservableObjectCollection<Sound>();
 
             Keys.CollectionChanged += (sender, e) => RaisePropertyChanged("Keys");
-            CounterCollection.CollectionChanged += (sender, e) => RaisePropertyChanged("CounterCollection");
-            CounterCollection.CollectionChanged += (sender, e) => RaisePropertyChanged("SelectedCounter");
             SoundCollection.CollectionChanged += (sender, e) => RaisePropertyChanged("SoundCollection");
             SoundCollection.CollectionChanged += (sender, e) => RaisePropertyChanged("SelectedSound");
         }
@@ -94,7 +68,6 @@ namespace DCSB.Models
         {
             Preset clonedPreset = new Preset() { Name = $"{Name} copy" };
             foreach (VKey key in Keys) clonedPreset.Keys.Add(key);
-            foreach (Counter counter in CounterCollection) clonedPreset.CounterCollection.Add((Counter)counter.Clone());
             foreach (Sound sound in SoundCollection) clonedPreset.SoundCollection.Add((Sound)sound.Clone());
             return clonedPreset;
         }

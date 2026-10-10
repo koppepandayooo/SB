@@ -33,26 +33,6 @@ namespace DCSB.ViewModels
             get { return _rightPresetViewModel; }
         }
 
-        public ICommand CopyCountersRightCommand
-        {
-            get { return new RelayCommand(CopyCountersRight); }
-        }
-        private void CopyCountersRight()
-        {
-            if (_rightPresetViewModel.SelectedPreset != null)
-                CopyItemsToList(_leftPresetViewModel.SelectedCounters, _rightPresetViewModel.SelectedPreset.CounterCollection);
-        }
-
-        public ICommand CopyCountersLeftCommand
-        {
-            get { return new RelayCommand(CopyCountersLeft); }
-        }
-        private void CopyCountersLeft()
-        {
-            if (_leftPresetViewModel.SelectedPreset != null)
-                CopyItemsToList(_rightPresetViewModel.SelectedCounters, _leftPresetViewModel.SelectedPreset.CounterCollection);
-        }
-
         public ICommand CopySoundsRightCommand
         {
             get { return new RelayCommand(CopySoundsRight); }

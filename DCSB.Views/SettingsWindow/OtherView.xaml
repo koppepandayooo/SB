@@ -17,15 +17,6 @@
     
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <GroupBox Header="Enable">
-                <Controls:RadioButtonList SelectedValue="{Binding Enable}"
-                                          SelectedValuePath="Tag">
-                    <ListBoxItem Tag="{x:Static Utils:DisplayOption.Both}">Both</ListBoxItem>
-                    <ListBoxItem Tag="{x:Static Utils:DisplayOption.Counters}">Only Counters</ListBoxItem>
-                    <ListBoxItem Tag="{x:Static Utils:DisplayOption.Sounds}">Only Sounds</ListBoxItem>
-                </Controls:RadioButtonList>
-            </GroupBox>
-
             <GroupBox Header="Other">
                 <CheckBox IsChecked="{Binding ConfigurationModel.MinimizeToTray}">Minimize to tray</CheckBox>
             </GroupBox>

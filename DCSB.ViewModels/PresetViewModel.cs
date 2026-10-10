@@ -14,7 +14,6 @@ namespace DCSB.ViewModels
             _applicationStateModel = applicationStateModel;
             _configurationModel = configurationModel;
 
-            _selectedCounters = new ObservableCollection<Counter>();
             _selectedSounds = new ObservableCollection<Sound>();
         }
 
@@ -38,17 +37,6 @@ namespace DCSB.ViewModels
             {
                 _selectedPreset = value;
                 RaisePropertyChanged("SelectedPreset");
-            }
-        }
-
-        private ObservableCollection<Counter> _selectedCounters;
-        public ObservableCollection<Counter> SelectedCounters
-        {
-            get { return _selectedCounters; }
-            set
-            {
-                _selectedCounters = value;
-                RaisePropertyChanged("SelectedCounters");
             }
         }
 
@@ -146,23 +134,6 @@ namespace DCSB.ViewModels
             _applicationStateModel.ModifiedBindable = null;
         }
 
-        public ICommand AddCounterCommand
-        {
-            get { return new RelayCommand(AddCounter); }
-        }
-        private void AddCounter()
-        {
-            if (SelectedPreset != null)
-            {
-                Counter counter = new Counter();
-                SelectedPreset.CounterCollection.Add(counter);
-                SelectedCounters.Clear();
-                SelectedCounters.Add(counter);
-                _applicationStateModel.ModifiedCounter = counter;
-                _applicationStateModel.CounterOpened = true;
-            }
-        }
-
         public ICommand AddSoundCommand
         {
             get { return new RelayCommand(AddSound); }
@@ -180,15 +151,6 @@ namespace DCSB.ViewModels
             }
         }
 
-        public ICommand RemoveCountersCommand
-        {
-            get { return new RelayCommand(RemoveCounters); }
-        }
-        private void RemoveCounters()
-        {
-            RemoveItemsFromList(SelectedCounters, SelectedPreset.CounterCollection);
-        }
-
         public ICommand RemoveSoundsCommand
         {
             get { return new RelayCommand(RemoveSounds); }
@@ -196,19 +158,6 @@ namespace DCSB.ViewModels
         private void RemoveSounds()
         {
             RemoveItemsFromList(SelectedSounds, SelectedPreset.SoundCollection);
-        }
-
-        public ICommand OpenCounterCommand
-        {
-            get { return new RelayCommand(OpenCounter); }
-        }
-        private void OpenCounter()
-        {
-            if (SelectedCounters.Count > 0)
-            {
-                _applicationStateModel.ModifiedCounter = SelectedCounters[0];
-                _applicationStateModel.CounterOpened = true;
-            }
         }
 
         public ICommand OpenSoundCommand

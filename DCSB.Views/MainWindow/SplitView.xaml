@@ -4,25 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DCSB.Views.MainWindow"
-             xmlns:Utils="clr-namespace:DCSB.Utils;assembly=DCSB.Utils"
              xmlns:Converters="clr-namespace:DCSB.Converters;assembly=DCSB.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300"
-             d:DesignWidth="400"
-             SizeChanged="UserControlSizeChanged">
+             d:DesignWidth="400">
 
     <UserControl.Resources>
-        <Converters:DisplayOptionToEnabled x:Key="DisplayOptionToEnabled" />
         <Converters:AreEqualConverter x:Key="AreEqualConverter" />
         <Converters:VKeysToStringConverter x:Key="vKeysToStringConverter" />
 
-        <DataTemplate x:Key="CounterListView">
-            <local:CounterListView DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext}" />
-        </DataTemplate>
-
-        <DataTemplate x:Key="SoundListView">
-            <local:SoundListView DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext}" />
-        </DataTemplate>
     </UserControl.Resources>
 
     <DockPanel>
@@ -65,39 +55,10 @@
                       HorizontalAlignment="Right">
                 <MenuItem Header="About" 
                           Command="{Binding OpenAboutCommand}" />
-                <MenuItem Header="Check for updates" 
-                          Command="{Binding CheckForUpdatesCommand}" />
             </MenuItem>
         </Menu>
 
-        <ContentControl>
-            <ContentControl.Style>
-                <Style TargetType="{x:Type ContentControl}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ConfigurationModel.Enable}" Value="{x:Static Utils:DisplayOption.Counters}">
-                            <Setter Property="ContentTemplate" Value="{StaticResource CounterListView}" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding ConfigurationModel.Enable}" Value="{x:Static Utils:DisplayOption.Sounds}">
-                            <Setter Property="ContentTemplate" Value="{StaticResource SoundListView}" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ContentControl.Style>
-
-            <Grid x:Name="splitterGrid">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="{Binding CountersWidth, Mode=TwoWay}" MinWidth="180" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="{Binding SoundsWidth, Mode=TwoWay}" MinWidth="180" />
-                </Grid.ColumnDefinitions>
-
-                <ContentControl ContentTemplate="{StaticResource CounterListView}" Grid.Column="0" />
-
-                <GridSplitter HorizontalAlignment="Stretch" Width="5" Grid.Column="1" />
-
-                <ContentControl ContentTemplate="{StaticResource SoundListView}" Grid.Column="2" />
-            </Grid>
-        </ContentControl>
+        <local:SoundListView />
 
     </DockPanel>
 </UserControl>

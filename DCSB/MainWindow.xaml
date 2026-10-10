@@ -7,10 +7,13 @@
         xmlns:Views="clr-namespace:DCSB.Views.MainWindow;assembly=DCSB.Views"
         xmlns:ViewModels="clr-namespace:DCSB.ViewModels;assembly=DCSB.ViewModels"
         xmlns:Interactivity="clr-namespace:DCSB.Interactivity;assembly=DCSB.Interactivity"
-        Title="Deathcounter and Soundboard"
+        Title="DCSB Soundboard"
         MinHeight="150"
-        MinWidth="380"
+        MinWidth="300"
         Loaded="WindowLoaded"
+        AllowDrop="True"
+        DragOver="WindowDragOver"
+        Drop="WindowDrop"
         Icon="icon.ico"
         Height="{Binding ConfigurationModel.WindowHeight, Mode=TwoWay}"
         Width="{Binding ConfigurationModel.WindowWidth, Mode=TwoWay}">
@@ -27,9 +30,6 @@
                                                DataContext="{Binding}" />
         <Interactivity:OpenCloseWindowBehavior WindowType="local:SoundWindow" 
                                                Open="{Binding ApplicationStateModel.SoundOpened, Mode=TwoWay}" 
-                                               DataContext="{Binding}" />
-        <Interactivity:OpenCloseWindowBehavior WindowType="local:CounterWindow" 
-                                               Open="{Binding ApplicationStateModel.CounterOpened, Mode=TwoWay}" 
                                                DataContext="{Binding}" />
         <Interactivity:OpenCloseWindowBehavior WindowType="local:BindKeysWindow" 
                                                Open="{Binding ApplicationStateModel.BindKeysOpened, Mode=TwoWay}" 

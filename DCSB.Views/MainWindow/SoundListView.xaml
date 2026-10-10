@@ -97,7 +97,10 @@
             <StackPanel />
         </DockPanel>
 
-        <DataGrid ItemsSource="{Binding ConfigurationModel.SelectedPreset.SoundCollection}" 
+        <Grid>
+        <DataGrid x:Name="SoundGrid"
+                  SelectionChanged="SoundGridSelectionChanged"
+                  ItemsSource="{Binding ConfigurationModel.SelectedPreset.SoundCollection}" 
                   SelectedItem="{Binding ConfigurationModel.SelectedPreset.SelectedSound, Mode=TwoWay}"
                   Interactivity:Commands.DoubleClickCommand="{Binding PlayCommand}"
                   AutoGenerateColumns="False"
@@ -116,6 +119,9 @@
             </DataGrid.ContextMenu>
 
             <DataGrid.Resources>
+                <!-- Keep the selection clearly visible while the window is not focused (e.g. while in game) -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{x:Static SystemColors.HighlightColor}" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="{x:Static SystemColors.HighlightTextColor}" />
                 <ContextMenu x:Key="RowMenu" DataContext="{Binding}">
                     <MenuItem Header="Edit" 
                               Command="{Binding DataContext.OpenSoundCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
@@ -161,5 +167,26 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
+        <TextBlock Text="ここに音声ファイル（複数可）やフォルダをドラッグ＆ドロップ"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="10"
+                   Foreground="Gray"
+                   IsHitTestVisible="False">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ConfigurationModel.SelectedPreset.SoundCollection.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        </Grid>
     </DockPanel>
 </UserControl>

@@ -4,25 +4,7 @@ namespace DCSB.Business
 {
     public class OpenFileManager
     {
-        public string OpenCounterFile()
-        {
-            OpenFileDialog fileDialog = new OpenFileDialog
-            {
-                Title = "Choose counter file",
-                Filter = "txt files|*.txt",
-                AddExtension = true,
-                RestoreDirectory = true,
-                Multiselect = false
-            };
-
-            bool? result = fileDialog.ShowDialog();
-
-            if (result.HasValue && result.Value)
-            {
-                return fileDialog.FileName;
-            }
-            return null;
-        }
+        public static readonly string[] SoundExtensions = { ".wma", ".mp3", ".wav", ".ogg", ".m4a", ".aiff", ".flac" };
 
         public string[] OpenSoundFiles()
         {

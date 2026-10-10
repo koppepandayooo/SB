@@ -94,28 +94,6 @@ namespace DCSB.Models
             }
         }
 
-        private double _countersWidth;
-        public double CountersWidth
-        {
-            get { return _countersWidth; }
-            set
-            {
-                _countersWidth = value;
-                RaisePropertyChanged("CountersWidth");
-            }
-        }
-
-        private double _soundsWidth;
-        public double SoundsWidth
-        {
-            get { return _soundsWidth; }
-            set
-            {
-                _soundsWidth = value;
-                RaisePropertyChanged("SoundsWidth");
-            }
-        }
-
         private bool _minimizeToTray;
         public bool MinimizeToTray
         {
@@ -127,16 +105,31 @@ namespace DCSB.Models
             }
         }
 
-        private DisplayOption _enable;
-        public DisplayOption Enable
+        private WheelMode _wheelMode;
+        public WheelMode WheelMode
         {
-            get { return _enable; }
+            get { return _wheelMode; }
             set
             {
-                _enable = value;
-                RaisePropertyChanged("Enable");
+                _wheelMode = value;
+                RaisePropertyChanged("WheelMode");
             }
         }
+
+        private bool _showSelectionOverlay;
+        public bool ShowSelectionOverlay
+        {
+            get { return _showSelectionOverlay; }
+            set
+            {
+                _showSelectionOverlay = value;
+                RaisePropertyChanged("ShowSelectionOverlay");
+            }
+        }
+
+        // XmlSerializer appends to collections created in constructors, so default
+        // key bindings are applied once after loading instead of in the constructor
+        public bool WheelDefaultsApplied { get; set; }
 
         private ObservableObjectCollection<Preset> _presetCollection;
         public ObservableObjectCollection<Preset> PresetCollection
@@ -171,17 +164,6 @@ namespace DCSB.Models
             }
         }
 
-        private CounterShortcuts _counterShortcuts;
-        public CounterShortcuts CounterShortcuts
-        {
-            get { return _counterShortcuts; }
-            set
-            {
-                _counterShortcuts = value;
-                RaisePropertyChanged("CounterShortcuts");
-            }
-        }
-
         private SoundShortcuts _soundShortcuts;
         public SoundShortcuts SoundShortcuts
         {
@@ -196,12 +178,10 @@ namespace DCSB.Models
         public ConfigurationModel()
         {
             PresetCollection = new ObservableObjectCollection<Preset>();
-            CounterShortcuts = new CounterShortcuts();
             SoundShortcuts = new SoundShortcuts();
 
             PresetCollection.CollectionChanged += (sender, e) => RaisePropertyChanged("PresetCollection");
             PresetCollection.CollectionChanged += (sender, e) => RaisePropertyChanged("SelectedPreset");
-            CounterShortcuts.PropertyChanged += (sender, e) => RaisePropertyChanged("CounterShortcuts");
             SoundShortcuts.PropertyChanged += (sender, e) => RaisePropertyChanged("SoundShortcuts");
 
             Volume = 100;
@@ -209,8 +189,8 @@ namespace DCSB.Models
             SecondaryDeviceVolume = 100;
             WindowHeight = 300;
             WindowWidth = 500;
-            CountersWidth = 1;
-            SoundsWidth = 1;
+            WheelMode = WheelMode.WithModifier;
+            ShowSelectionOverlay = true;
         }
     }
 }

@@ -26,17 +26,6 @@ namespace DCSB.Models
             }
         }
 
-        private bool _counterOpened;
-        public bool CounterOpened
-        {
-            get { return _counterOpened; }
-            set
-            {
-                _counterOpened = value;
-                RaisePropertyChanged("CounterOpened");
-            }
-        }
-
         private bool _bindKeysOpened;
         public bool BindKeysOpened
         {
@@ -67,17 +56,6 @@ namespace DCSB.Models
             {
                 _modifiedBindable = value;
                 RaisePropertyChanged("ModifiedBindable");
-            }
-        }
-
-        private Counter _modifiedCounter;
-        public Counter ModifiedCounter
-        {
-            get { return _modifiedCounter; }
-            set
-            {
-                _modifiedCounter = value;
-                RaisePropertyChanged("ModifiedCounter");
             }
         }
 

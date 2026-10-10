@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
 namespace DCSB.Views.MainWindow
 {
@@ -12,9 +12,11 @@ namespace DCSB.Views.MainWindow
             InitializeComponent();
         }
 
-        private void DataGridRow_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void SoundGridSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            // The selection may change from the mouse wheel while the window is in the background
+            if (SoundGrid.SelectedItem != null)
+                SoundGrid.ScrollIntoView(SoundGrid.SelectedItem);
         }
     }
 }

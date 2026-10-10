@@ -6,73 +6,19 @@
              xmlns:local="clr-namespace:DCSB.Views.SettingsWindow"
              xmlns:Converters="clr-namespace:DCSB.Converters;assembly=DCSB.Converters"
              xmlns:Interactivity="clr-namespace:DCSB.Interactivity;assembly=DCSB.Interactivity"
+             xmlns:Controls="clr-namespace:DCSB.Controls;assembly=DCSB.Controls"
+             xmlns:Utils="clr-namespace:DCSB.Utils;assembly=DCSB.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="300"
              d:DesignWidth="400">
 
     <UserControl.Resources>
         <Converters:VKeysToStringConverter x:Key="vKeysToStringConverter" />
+        <Converters:EqualsParameterConverter x:Key="areEqualConverter" />
     </UserControl.Resources>
     
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <GroupBox Header="Counters">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <Label Grid.Row="0" Grid.Column="0" x:Name="label">Next:</Label>
-                    <TextBox Grid.Row="0" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
-                             Text="{Binding ConfigurationModel.CounterShortcuts.Next.Keys, Converter={StaticResource vKeysToStringConverter}}"
-                             Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
-                             Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.CounterShortcuts.Next}" />
-                    <Button Grid.Row="0" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
-                            CommandParameter="{Binding ConfigurationModel.CounterShortcuts.Next}">...</Button>
-
-                    <Label Grid.Row="1" Grid.Column="0">Previous:</Label>
-                    <TextBox Grid.Row="1" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
-                             Text="{Binding ConfigurationModel.CounterShortcuts.Previous.Keys, Converter={StaticResource vKeysToStringConverter}}"
-                             Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
-                             Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.CounterShortcuts.Previous}" />
-                    <Button Grid.Row="1" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
-                            CommandParameter="{Binding ConfigurationModel.CounterShortcuts.Previous}">...</Button>
-                    
-                    <Label Grid.Row="2" Grid.Column="0">Increment:</Label>
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
-                             Text="{Binding ConfigurationModel.CounterShortcuts.Increment.Keys, Converter={StaticResource vKeysToStringConverter}}"
-                             Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
-                             Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.CounterShortcuts.Increment}" />
-                    <Button Grid.Row="2" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
-                            CommandParameter="{Binding ConfigurationModel.CounterShortcuts.Increment}">...</Button>
-                    
-                    <Label Grid.Row="3" Grid.Column="0">Decrement:</Label>
-                    <TextBox Grid.Row="3" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
-                             Text="{Binding ConfigurationModel.CounterShortcuts.Decrement.Keys, Converter={StaticResource vKeysToStringConverter}}"
-                             Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
-                             Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.CounterShortcuts.Decrement}" />
-                    <Button Grid.Row="3" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
-                            CommandParameter="{Binding ConfigurationModel.CounterShortcuts.Decrement}">...</Button>
-                    
-                    <Label Grid.Row="4" Grid.Column="0">Reset:</Label>
-                    <TextBox Grid.Row="4" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
-                             Text="{Binding ConfigurationModel.CounterShortcuts.Reset.Keys, Converter={StaticResource vKeysToStringConverter}}"
-                             Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
-                             Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.CounterShortcuts.Reset}" />
-                    <Button Grid.Row="4" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
-                            CommandParameter="{Binding ConfigurationModel.CounterShortcuts.Reset}">...</Button>
-                </Grid>
-            </GroupBox>
-
             <GroupBox Header="Sounds">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -84,32 +30,72 @@
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
-                    
-                    <Label Grid.Row="0" Grid.Column="0" Width="{Binding ActualWidth, ElementName=label}">Pause:</Label>
+
+                    <Label Grid.Row="0" Grid.Column="0">選択中を再生:</Label>
                     <TextBox Grid.Row="0" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
+                             ToolTip="キーボードのキーの他に、マウスの中ボタン(MBUTTON)・サイドボタン(XBUTTON1/2)も割り当てできます"
+                             Text="{Binding ConfigurationModel.SoundShortcuts.PlaySelected.Keys, Converter={StaticResource vKeysToStringConverter}}"
+                             Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
+                             Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.SoundShortcuts.PlaySelected}" />
+                    <Button Grid.Row="0" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
+                            CommandParameter="{Binding ConfigurationModel.SoundShortcuts.PlaySelected}">...</Button>
+
+                    <Label Grid.Row="1" Grid.Column="0">Pause:</Label>
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
                              Text="{Binding ConfigurationModel.SoundShortcuts.Pause.Keys, Converter={StaticResource vKeysToStringConverter}}"
                              Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
                              Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.SoundShortcuts.Pause}" />
-                    <Button Grid.Row="0" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
+                    <Button Grid.Row="1" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
                             CommandParameter="{Binding ConfigurationModel.SoundShortcuts.Pause}">...</Button>
 
-                    <Label Grid.Row="1" Grid.Column="0">Continue:</Label>
-                    <TextBox Grid.Row="1" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
+                    <Label Grid.Row="2" Grid.Column="0">Continue:</Label>
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
                              Text="{Binding ConfigurationModel.SoundShortcuts.Continue.Keys, Converter={StaticResource vKeysToStringConverter}}"
                              Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
                              Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.SoundShortcuts.Continue}" />
-                    <Button Grid.Row="1" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
+                    <Button Grid.Row="2" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
                             CommandParameter="{Binding ConfigurationModel.SoundShortcuts.Continue}">...</Button>
 
-                    <Label Grid.Row="2" Grid.Column="0">Stop:</Label>
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
+                    <Label Grid.Row="3" Grid.Column="0">Stop:</Label>
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
                              Text="{Binding ConfigurationModel.SoundShortcuts.Stop.Keys, Converter={StaticResource vKeysToStringConverter}}"
                              Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
                              Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.SoundShortcuts.Stop}" />
-                    <Button Grid.Row="2" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
+                    <Button Grid.Row="3" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
                             CommandParameter="{Binding ConfigurationModel.SoundShortcuts.Stop}">...</Button>
                 </Grid>
+            </GroupBox>
+
+            <GroupBox Header="マウスホイールで音声を選択">
+                <StackPanel>
+                    <Controls:RadioButtonList SelectedValue="{Binding WheelMode}"
+                                              SelectedValuePath="Tag">
+                        <ListBoxItem Tag="{x:Static Utils:WheelMode.WithModifier}">修飾キーを押している間だけ</ListBoxItem>
+                        <ListBoxItem Tag="{x:Static Utils:WheelMode.Always}">常に（ゲームのホイール操作でも切り替わります）</ListBoxItem>
+                        <ListBoxItem Tag="{x:Static Utils:WheelMode.Disabled}">使わない</ListBoxItem>
+                    </Controls:RadioButtonList>
+
+                    <Grid IsEnabled="{Binding WheelMode, Converter={StaticResource areEqualConverter}, ConverterParameter={x:Static Utils:WheelMode.WithModifier}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0">修飾キー:</Label>
+                        <TextBox Grid.Row="0" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
+                                 ToolTip="このキー（複数可）を押している間だけホイールで音声が切り替わります"
+                                 Text="{Binding ConfigurationModel.SoundShortcuts.WheelModifier.Keys, Converter={StaticResource vKeysToStringConverter}}"
+                                 Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
+                                 Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.SoundShortcuts.WheelModifier}" />
+                        <Button Grid.Row="0" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}" 
+                                CommandParameter="{Binding ConfigurationModel.SoundShortcuts.WheelModifier}">...</Button>
+                    </Grid>
+
+                    <CheckBox Margin="2,4" IsChecked="{Binding ConfigurationModel.ShowSelectionOverlay}">切り替え時に画面に音声名を表示する</CheckBox>
+                </StackPanel>
             </GroupBox>
         </StackPanel>
     </ScrollViewer>
