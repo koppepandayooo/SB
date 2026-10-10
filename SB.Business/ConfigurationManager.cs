@@ -24,29 +24,41 @@ namespace SB.Business
 
         private void SaveCallback(object state)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationModel));
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationModel));
 
-            if (!File.Exists(TempConfigPath))
-            {
-                CreateFile(TempConfigPath);
-            }
-            using (FileStream stream = File.Open(TempConfigPath, FileMode.Truncate))
-            {
-                serializer.Serialize(stream, _model);
-            }
+                if (!File.Exists(TempConfigPath))
+                {
+                    CreateFile(TempConfigPath);
+                }
+                using (FileStream stream = File.Open(TempConfigPath, FileMode.Truncate))
+                {
+                    serializer.Serialize(stream, _model);
+                }
 
-            if (File.Exists(ConfigPath))
-            {
-                File.Replace(TempConfigPath, ConfigPath, BackupConfigPath, true);
-            }
-            else
-            {
-                File.Move(TempConfigPath, ConfigPath);
-            }
+                if (File.Exists(ConfigPath))
+                {
+                    File.Replace(TempConfigPath, ConfigPath, BackupConfigPath, true);
+                }
+                else
+                {
+                    File.Move(TempConfigPath, ConfigPath);
+                }
 
-            Debug.WriteLine("Saved configuration");
-            _timer.Dispose();
-            _timer = null;
+                Debug.WriteLine("Saved configuration");
+            }
+            catch (Exception e)
+            {
+                // This runs on a timer thread; an exception here would take the whole app down.
+                // The previous config file is untouched, and the next change retries the save.
+                Debug.WriteLine(e);
+            }
+            finally
+            {
+                _timer?.Dispose();
+                _timer = null;
+            }
         }
 
         /// <summary>

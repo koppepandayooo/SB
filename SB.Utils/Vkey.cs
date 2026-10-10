@@ -193,7 +193,13 @@
                             //                  0xE6,  // OEM specific
         PACKET = 0xE7,      // Windows 2000/XP: Used to pass Unicode characters as if they were keystrokes. The VK_PACKET key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods. For more information, see Remark in KEYBDINPUT, SendInput, WM_KEYDOWN, and WM_KEYUP
                             //                  0xE8,  // Unassigned
-                            //                  0xE9-F5,  // OEM specific
+                            //                  0xE9-EF,  // OEM specific
+        OEM_ATTN = 0xF0,    // Japanese keyboards: Eisuu (Caps Lock)
+        OEM_FINISH = 0xF1,  // Japanese keyboards: Katakana
+        OEM_COPY = 0xF2,    // Japanese keyboards: Hiragana
+        OEM_AUTO = 0xF3,    // Japanese keyboards: Hankaku/Zenkaku
+        OEM_ENLW = 0xF4,    // Japanese keyboards: Hankaku/Zenkaku
+        OEM_BACKTAB = 0xF5,
         ATTN = 0xF6,        // Attn key
         CRSEL = 0xF7,       // CrSel key
         EXSEL = 0xF8,       // ExSel key

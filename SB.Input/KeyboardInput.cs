@@ -62,6 +62,22 @@ namespace SB.Input
         private void OnKeyPressed(object sender, InputEventArg e)
         {
             VKey key = (VKey)e.KeyPressEvent.VKey;
+
+            // Key codes without a VKey name cannot be saved in the configuration, so ignore them
+            if (!Enum.IsDefined(typeof(VKey), key))
+                return;
+
+            // IME mode keys (Hankaku/Zenkaku etc.) do not send a matching key up, so they would
+            // stay "pressed" forever. Treat them as a press and release in one go.
+            if (IsMomentaryKey(key))
+            {
+                if (e.KeyPressEvent.Message == 256 || e.KeyPressEvent.Message == 260)
+                {
+                    Key_Down(key);
+                    Key_Up(key);
+                }
+                return;
+            }
             if (e.KeyPressEvent.Message == 256 || e.KeyPressEvent.Message == 260)
             {
                 if (!(key == VKey.SHIFT && pressedKeys.Contains(key)))
@@ -95,6 +111,11 @@ namespace SB.Input
                     Key_Up(key);
                 }
             }
+        }
+
+        private static bool IsMomentaryKey(VKey key)
+        {
+            return key >= VKey.OEM_ATTN && key <= VKey.OEM_BACKTAB;
         }
 
         private void Key_Down(VKey key)
