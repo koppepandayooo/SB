@@ -16,13 +16,19 @@
 # define icon
 	!define MUI_ICON "..\SB\icon.ico"
 
+# start the program without administrator rights (used by MUI_FINISHPAGE_RUN_FUNCTION)
+Function LaunchAsUser
+	Exec '"$WINDIR\explorer.exe" "$INSTDIR\SB.exe"'
+FunctionEnd
+
 # install pages
 	!insertmacro MUI_PAGE_WELCOME
 	!insertmacro MUI_PAGE_DIRECTORY
 	!insertmacro MUI_PAGE_INSTFILES
 		# These indented statements modify settings for MUI_PAGE_FINISH
 		!define MUI_FINISHPAGE_NOAUTOCLOSE
-		!define MUI_FINISHPAGE_RUN "$INSTDIR\SB.exe"
+		!define MUI_FINISHPAGE_RUN
+		!define MUI_FINISHPAGE_RUN_FUNCTION LaunchAsUser
 		!define MUI_FINISHPAGE_RUN_CHECKED
 		!define MUI_FINISHPAGE_RUN_TEXT "Start SB"
 	!insertmacro MUI_PAGE_FINISH
