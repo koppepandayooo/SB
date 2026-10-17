@@ -12,6 +12,7 @@ It is a modified version of [Deathcounter and Soundboard](https://github.com/Kal
   The selected sound's name is shown briefly on screen.
 - **Play the selected sound** with one key or mouse button (default: middle mouse button).
 - Mouse middle/side buttons can be bound like any key, also to individual sounds.
+- Select several sounds (Ctrl/Shift+click, Ctrl+A) and press Delete to remove them together.
 - Per sound: name, one or more files (a random one is played), key or key combination, volume, loop.
 - Presets to switch between lists of sounds, even with a keyboard shortcut.
 - Pause / continue / stop shortcuts, overlap sounds, one or two output devices, minimize to tray.

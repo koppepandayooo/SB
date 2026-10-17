@@ -76,4 +76,5 @@
     <sys:String x:Key="Str_NoUpdate" xml:space="preserve">更新はありません。</sys:String>
     <sys:String x:Key="Str_UpdateCheckFailedTitle" xml:space="preserve">更新の確認に失敗しました</sys:String>
     <sys:String x:Key="Str_UpdateCheckFailedMessage" xml:space="preserve">{0}&#x0a;GitHubを開いて手動で確認しますか？</sys:String>
+    <sys:String x:Key="Str_ConfirmRemoveSounds" xml:space="preserve">{0}個のサウンドを削除しますか？</sys:String>
 </ResourceDictionary>

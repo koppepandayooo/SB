@@ -288,13 +288,18 @@ namespace SB.ViewModels
         }
         private void OpenSoundFileDialog()
         {
+            // The edit window shows ModifiedSound. SelectedSound can change while it is open
+            // (mouse wheel, sound hotkeys), so it must not be used here.
+            Sound target = _applicationStateModel.ModifiedSound;
+            if (target == null) return;
+
             string[] result = _openFileManager.OpenSoundFiles();
             if (result != null)
             {
-                _configurationModel.SelectedPreset.SelectedSound.Files.Clear();
+                target.Files.Clear();
                 foreach (string file in result)
                 {
-                    _configurationModel.SelectedPreset.SelectedSound.Files.Add(file);
+                    target.Files.Add(file);
                 }
             }
         }
@@ -406,13 +411,33 @@ namespace SB.ViewModels
             }
         }
 
+        /// <summary>Sounds selected in the main list; kept up to date by the list view.</summary>
+        public List<Sound> SelectedSounds { get; } = new List<Sound>();
+
         public ICommand RemoveSoundCommand
         {
             get { return new RelayCommand(RemoveSound); }
         }
         private void RemoveSound()
         {
-            _configurationModel.SelectedPreset.SoundCollection.Remove(_configurationModel.SelectedPreset.SelectedSound);
+            List<Sound> sounds = SelectedSounds.ToList();
+            if (sounds.Count == 0 && _configurationModel.SelectedPreset.SelectedSound != null)
+                sounds.Add(_configurationModel.SelectedPreset.SelectedSound);
+            if (sounds.Count == 0) return;
+
+            if (sounds.Count > 1)
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    string.Format(UiLanguage.Get("Str_ConfirmRemoveSounds"), sounds.Count),
+                    UiLanguage.Get("Str_RemoveSound"),
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+                if (result != MessageBoxResult.Yes) return;
+            }
+
+            foreach (Sound sound in sounds)
+                _configurationModel.SelectedPreset.SoundCollection.Remove(sound);
+            SelectedSounds.Clear();
         }
 
         public ICommand PlayCommand
