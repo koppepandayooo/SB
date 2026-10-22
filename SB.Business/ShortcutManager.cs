@@ -3,6 +3,7 @@ using SB.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Data;
 
 namespace SB.Business
 {
@@ -94,16 +95,27 @@ namespace SB.Business
             }
 
             Preset preset = _configurationModel.SelectedPreset;
-            IList<Sound> sounds = preset.SoundCollection;
+            // Follow the order shown in the list, which may be sorted by a column header
+            IList<Sound> sounds = GetDisplayedSounds(preset);
             if (sounds.Count == 0 || delta == 0) return;
 
             // Wheel down selects the next sound, wheel up the previous one, wrapping around
             int step = delta < 0 ? 1 : -1;
-            int index = preset.SelectedSound == null ? (step > 0 ? -1 : 0) : sounds.IndexOf(preset.SelectedSound);
+            int index = preset.SelectedSound == null ? -1 : sounds.IndexOf(preset.SelectedSound);
+            if (index < 0) index = step > 0 ? -1 : 0;
             int next = ((index + step) % sounds.Count + sounds.Count) % sounds.Count;
             preset.SelectedSound = sounds[next];
 
             SelectionChangedByWheel?.Invoke(preset.SelectedSound);
+        }
+
+        /// <summary>
+        /// The sounds in the order the list shows them. Sorting by clicking a column header only
+        /// changes the view of the collection, not the collection itself.
+        /// </summary>
+        public static IList<Sound> GetDisplayedSounds(Preset preset)
+        {
+            return CollectionViewSource.GetDefaultView(preset.SoundCollection).Cast<Sound>().ToList();
         }
 
         private T ResolveShortcut<T>(VKey key, IEnumerable<VKey> pressedKeys, IEnumerable<T> items) where T : IBindable

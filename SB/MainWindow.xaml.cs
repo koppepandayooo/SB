@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
+using SB.Business;
 using SB.Utils;
 using SB.ViewModels;
 
@@ -67,7 +68,7 @@ namespace SB
             if (!(DataContext is ViewModel viewModel) || !viewModel.ConfigurationModel.ShowSelectionOverlay)
                 return;
 
-            var sounds = viewModel.ConfigurationModel.SelectedPreset.SoundCollection;
+            var sounds = ShortcutManager.GetDisplayedSounds(viewModel.ConfigurationModel.SelectedPreset);
             if (selectionOverlay == null)
                 selectionOverlay = new SelectionOverlay();
             selectionOverlay.ShowMessage($"{sounds.IndexOf(sound) + 1}/{sounds.Count}  {sound.Name}");
