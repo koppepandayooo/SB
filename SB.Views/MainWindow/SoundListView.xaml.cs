@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using SB.Models;
 using SB.ViewModels;
 
@@ -21,6 +22,15 @@ namespace SB.Views.MainWindow
         public SoundListView()
         {
             InitializeComponent();
+
+            // The columns are side by side, so the wheel over the list scrolls sideways
+            SoundTiles.PreviewMouseWheel += (sender, e) =>
+            {
+                ScrollViewer scroll = FindScrollViewer(SoundTiles);
+                if (scroll == null) return;
+                scroll.ScrollToHorizontalOffset(scroll.HorizontalOffset - e.Delta);
+                e.Handled = true;
+            };
 
             // A new preset has a new collection (and a new view), so apply the chosen sort to it again
             DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(ListBox))
@@ -60,6 +70,17 @@ namespace SB.Views.MainWindow
                 foreach (Sound sound in selected)
                     viewModel.SelectedSounds.Add(sound);
             }
+        }
+
+        private static ScrollViewer FindScrollViewer(DependencyObject parent)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                ScrollViewer found = child as ScrollViewer ?? FindScrollViewer(child);
+                if (found != null) return found;
+            }
+            return null;
         }
 
         private void TileRightButtonDown(object sender, MouseButtonEventArgs e)

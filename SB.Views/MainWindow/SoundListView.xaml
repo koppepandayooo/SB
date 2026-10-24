@@ -222,7 +222,7 @@
         </DataGrid>
         </Grid>
 
-        <!-- Multi-column view: the same rows as the list, flowing from left to right and wrapping into rows -->
+        <!-- Multi-column view: the same rows as the list; when a column is full, the list continues in the next column to the right -->
         <Grid x:Name="TileHost">
             <Grid.Style>
                 <Style TargetType="Grid">
@@ -241,7 +241,8 @@
                      SelectedItem="{Binding ConfigurationModel.SelectedPreset.SelectedSound, Mode=TwoWay}"
                      Interactivity:Commands.DoubleClickCommand="{Binding PlayCommand}"
                      SelectionMode="Extended"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
                      ScrollViewer.CanContentScroll="False">
 
                 <ListBox.Resources>
@@ -266,7 +267,7 @@
 
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel />
+                        <WrapPanel Orientation="Vertical" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
 
