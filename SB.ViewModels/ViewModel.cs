@@ -68,6 +68,7 @@ namespace SB.ViewModels
             Task.Run(() => _updateManager.AutoUpdateCheck(Version));
 
             _shortcutManager.SelectionChangedByWheel += sound => SelectionChangedByWheel?.Invoke(sound);
+            _shortcutManager.PresetSwitchedByKey += preset => PresetSwitchedByKey?.Invoke(preset);
         }
 
         public IntPtr WindowHandle
@@ -84,6 +85,9 @@ namespace SB.ViewModels
 
         /// <summary>Raised when the selected sound was changed with the mouse wheel.</summary>
         public event Action<Sound> SelectionChangedByWheel;
+
+        /// <summary>Raised when the preset was changed with a key.</summary>
+        public event Action<Preset> PresetSwitchedByKey;
 
         public ApplicationStateModel ApplicationStateModel
         {
@@ -157,6 +161,16 @@ namespace SB.ViewModels
                 _configurationModel.Language = value;
                 UiLanguage.Apply(value);
                 RaisePropertyChanged("Language");
+            }
+        }
+
+        public bool TileView
+        {
+            get { return _configurationModel.TileView; }
+            set
+            {
+                _configurationModel.TileView = value;
+                RaisePropertyChanged("TileView");
             }
         }
 

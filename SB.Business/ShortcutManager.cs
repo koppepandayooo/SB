@@ -16,6 +16,9 @@ namespace SB.Business
         /// <summary>Raised when the selected sound was changed with the mouse wheel.</summary>
         public event Action<Sound> SelectionChangedByWheel;
 
+        /// <summary>Raised when the preset was changed with a key (its own key, or next / previous preset).</summary>
+        public event Action<Preset> PresetSwitchedByKey;
+
         public ShortcutManager(ApplicationStateModel applicationStateModel, ConfigurationModel configurationModel, SoundManager soundManager)
         {
             _applicationStateModel = applicationStateModel;
@@ -77,7 +80,31 @@ namespace SB.Business
             if (preset != null)
             {
                 _configurationModel.SelectedPreset = preset;
+                PresetSwitchedByKey?.Invoke(preset);
+                return;
             }
+
+            Shortcut presetShortcut = ResolveShortcut(key, pressedKeys, new List<Shortcut>()
+            {
+                _configurationModel.SoundShortcuts.NextPreset,
+                _configurationModel.SoundShortcuts.PreviousPreset
+            });
+            if (presetShortcut != null)
+            {
+                SwitchPreset(presetShortcut == _configurationModel.SoundShortcuts.NextPreset ? 1 : -1);
+            }
+        }
+
+        /// <summary>Selects the next (1) or previous (-1) preset, wrapping around.</summary>
+        public void SwitchPreset(int step)
+        {
+            var presets = _configurationModel.PresetCollection;
+            if (presets.Count < 2) return;
+
+            int index = presets.IndexOf(_configurationModel.SelectedPreset);
+            int next = ((index + step) % presets.Count + presets.Count) % presets.Count;
+            _configurationModel.SelectedPreset = presets[next];
+            PresetSwitchedByKey?.Invoke(presets[next]);
         }
 
         public void Wheel(int delta, List<VKey> pressedKeys)

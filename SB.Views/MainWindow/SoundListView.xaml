@@ -35,6 +35,38 @@
                     </Style>
                 </ContentControl.Style>
             </Label>
+
+            <ToggleButton DockPanel.Dock="Left"
+                          Margin="3,2"
+                          Padding="7,0"
+                          VerticalAlignment="Center"
+                          FontFamily="Segoe UI Symbol"
+                          Content="&#x25A6;"
+                          ToolTip="{DynamicResource Str_TileView}"
+                          IsChecked="{Binding TileView, Mode=TwoWay}" />
+
+            <ComboBox x:Name="SortCombo"
+                      DockPanel.Dock="Left"
+                      Margin="3,2"
+                      MinWidth="92"
+                      VerticalAlignment="Center"
+                      SelectedIndex="0"
+                      ToolTip="{DynamicResource Str_Sort}"
+                      SelectionChanged="SortComboSelectionChanged">
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding TileView}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+                <ComboBoxItem Tag="none" Content="{DynamicResource Str_SortAdded}" />
+                <ComboBoxItem Tag="asc" Content="{DynamicResource Str_SortNameAsc}" />
+                <ComboBoxItem Tag="desc" Content="{DynamicResource Str_SortNameDesc}" />
+            </ComboBox>
             
             <Slider x:Name="VolumeSlider"
                     VerticalAlignment="Center"
@@ -98,6 +130,16 @@
         </DockPanel>
 
         <Grid>
+        <Grid x:Name="ListHost">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding TileView}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
         <DataGrid x:Name="SoundGrid"
                   SelectionChanged="SoundGridSelectionChanged"
                   ItemsSource="{Binding ConfigurationModel.SelectedPreset.SoundCollection}" 
@@ -178,6 +220,113 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        </Grid>
+
+        <!-- Tile view: sounds flow from left to right and wrap into rows, so many sounds need less scrolling -->
+        <Grid x:Name="TileHost">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding TileView}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <ListBox x:Name="SoundTiles"
+                     SelectionChanged="SoundGridSelectionChanged"
+                     ItemsSource="{Binding ConfigurationModel.SelectedPreset.SoundCollection}"
+                     SelectedItem="{Binding ConfigurationModel.SelectedPreset.SelectedSound, Mode=TwoWay}"
+                     Interactivity:Commands.DoubleClickCommand="{Binding PlayCommand}"
+                     SelectionMode="Extended"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.CanContentScroll="False">
+
+                <ListBox.Resources>
+                    <ContextMenu x:Key="TileMenu" DataContext="{Binding}">
+                        <MenuItem Header="{DynamicResource Str_Edit}"
+                                  Command="{Binding DataContext.OpenSoundCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" />
+                        <MenuItem Header="{DynamicResource Str_Remove}"
+                                  Command="{Binding DataContext.RemoveSoundCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" />
+                    </ContextMenu>
+                </ListBox.Resources>
+
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{DynamicResource Str_Add}"
+                                  Command="{Binding AddSoundCommand}"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+
+                <ListBox.InputBindings>
+                    <KeyBinding Key="Delete" Command="{Binding RemoveSoundCommand}" />
+                </ListBox.InputBindings>
+
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Width" Value="170" />
+                        <Setter Property="Margin" Value="2" />
+                        <Setter Property="ContextMenu" Value="{StaticResource TileMenu}" />
+                        <EventSetter Event="PreviewMouseRightButtonDown" Handler="TileRightButtonDown" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <!-- Same look whether or not the window has focus, so the selection stays visible while in a game -->
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="Bd"
+                                            Background="#FFF7F7F7"
+                                            BorderBrush="#FFD5D5D5"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Padding="7,4">
+                                        <ContentPresenter />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#FFE5F1FB" />
+                                            <Setter TargetName="Bd" Property="BorderBrush" Value="#FF7DB7E8" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                            <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ToolTip="{Binding Name}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,0,12,0" />
+                            <TextBlock Grid.Row="1" Text="{Binding Keys, Converter={StaticResource vKeysToStringConverter}}"
+                                       FontSize="11" Opacity="0.7" TextTrimming="CharacterEllipsis" MinHeight="15" />
+                            <Ellipse Grid.RowSpan="2" Width="9" Height="9" Fill="#FFD10000"
+                                     HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,0,0"
+                                     Visibility="{Binding Error, Converter={StaticResource stringToVisibilityConverter}}">
+                                <Ellipse.ToolTip>
+                                    <ToolTip Content="{Binding Error}" />
+                                </Ellipse.ToolTip>
+                            </Ellipse>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
 
         <TextBlock Text="{DynamicResource Str_DropHint}"
                    TextWrapping="Wrap"

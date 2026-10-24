@@ -68,6 +68,38 @@
                 </Grid>
             </GroupBox>
 
+            <GroupBox Header="{DynamicResource Str_PresetsGroup}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="{DynamicResource Str_NextPresetLabel}" />
+                    <TextBox Grid.Row="0" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
+                             ToolTip="{DynamicResource Str_PresetKeysTip}"
+                             Text="{Binding ConfigurationModel.SoundShortcuts.NextPreset.Keys, Converter={StaticResource vKeysToStringConverter}}"
+                             Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
+                             Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.SoundShortcuts.NextPreset}" />
+                    <Button Grid.Row="0" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}"
+                            CommandParameter="{Binding ConfigurationModel.SoundShortcuts.NextPreset}">...</Button>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="{DynamicResource Str_PreviousPresetLabel}" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="2" IsReadOnly="True" Cursor="Arrow" VerticalContentAlignment="Center"
+                             ToolTip="{DynamicResource Str_PresetKeysTip}"
+                             Text="{Binding ConfigurationModel.SoundShortcuts.PreviousPreset.Keys, Converter={StaticResource vKeysToStringConverter}}"
+                             Interactivity:Commands.DoubleClickCommand="{Binding BindKeysCommand}"
+                             Interactivity:Commands.DoubleClickCommandParameter="{Binding ConfigurationModel.SoundShortcuts.PreviousPreset}" />
+                    <Button Grid.Row="1" Grid.Column="2" Margin="0,2,2,2" Width="20" Command="{Binding BindKeysCommand}"
+                            CommandParameter="{Binding ConfigurationModel.SoundShortcuts.PreviousPreset}">...</Button>
+                </Grid>
+            </GroupBox>
+
             <GroupBox Header="{DynamicResource Str_WheelGroup}">
                 <StackPanel>
                     <Controls:RadioButtonList SelectedValue="{Binding WheelMode}"

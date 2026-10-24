@@ -24,6 +24,7 @@ namespace SB
             ViewModel viewModel = new ViewModel();
             DataContext = viewModel;
             viewModel.SelectionChangedByWheel += ShowSelection;
+            viewModel.PresetSwitchedByKey += ShowPreset;
 
             Icon icon;
             using (Stream stream = System.Windows.Application.GetResourceStream(new Uri("icon.ico", UriKind.Relative)).Stream)
@@ -72,6 +73,18 @@ namespace SB
             if (selectionOverlay == null)
                 selectionOverlay = new SelectionOverlay();
             selectionOverlay.ShowMessage($"{sounds.IndexOf(sound) + 1}/{sounds.Count}  {sound.Name}");
+        }
+
+        private void ShowPreset(Models.Preset preset)
+        {
+            if (!(DataContext is ViewModel viewModel) || !viewModel.ConfigurationModel.ShowSelectionOverlay)
+                return;
+
+            var presets = viewModel.ConfigurationModel.PresetCollection;
+            if (selectionOverlay == null)
+                selectionOverlay = new SelectionOverlay();
+            selectionOverlay.ShowMessage(string.Format(UiLanguage.Get("Str_PresetFormat"),
+                $"{presets.IndexOf(preset) + 1}/{presets.Count}  {preset.Name}"));
         }
 
         private void WindowDragOver(object sender, System.Windows.DragEventArgs e)

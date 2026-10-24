@@ -77,4 +77,12 @@
     <sys:String x:Key="Str_UpdateCheckFailedTitle" xml:space="preserve">更新の確認に失敗しました</sys:String>
     <sys:String x:Key="Str_UpdateCheckFailedMessage" xml:space="preserve">{0}&#x0a;GitHubを開いて手動で確認しますか？</sys:String>
     <sys:String x:Key="Str_ConfirmRemoveSounds" xml:space="preserve">{0}個のサウンドを削除しますか？</sys:String>
+    <sys:String x:Key="Str_NextPresetLabel" xml:space="preserve">次のプリセット:</sys:String>
+    <sys:String x:Key="Str_PreviousPresetLabel" xml:space="preserve">前のプリセット:</sys:String>
+    <sys:String x:Key="Str_PresetKeysTip" xml:space="preserve">次／前のプリセットに切り替えます。プリセットごとに専用のキーを割り当てることもできます（設定 > プリセット）。</sys:String>
+    <sys:String x:Key="Str_TileView" xml:space="preserve">タイル表示（複数列）</sys:String>
+    <sys:String x:Key="Str_Sort" xml:space="preserve">並べ替え</sys:String>
+    <sys:String x:Key="Str_SortAdded" xml:space="preserve">追加順</sys:String>
+    <sys:String x:Key="Str_SortNameAsc" xml:space="preserve">名前 A→Z</sys:String>
+    <sys:String x:Key="Str_SortNameDesc" xml:space="preserve">名前 Z→A</sys:String>
 </ResourceDictionary>

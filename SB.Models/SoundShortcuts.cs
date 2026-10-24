@@ -48,6 +48,28 @@ namespace SB.Models
             }
         }
 
+        private Shortcut _nextPreset;
+        public Shortcut NextPreset
+        {
+            get { return _nextPreset; }
+            set
+            {
+                _nextPreset = value;
+                RaisePropertyChanged("NextPreset");
+            }
+        }
+
+        private Shortcut _previousPreset;
+        public Shortcut PreviousPreset
+        {
+            get { return _previousPreset; }
+            set
+            {
+                _previousPreset = value;
+                RaisePropertyChanged("PreviousPreset");
+            }
+        }
+
         private Shortcut _wheelModifier;
         public Shortcut WheelModifier
         {
@@ -66,12 +88,16 @@ namespace SB.Models
             _stop = new Shortcut();
             _playSelected = new Shortcut();
             _wheelModifier = new Shortcut();
+            _nextPreset = new Shortcut();
+            _previousPreset = new Shortcut();
 
             _pause.PropertyChanged += (sender, e) => RaisePropertyChanged("Pause");
             _continue.PropertyChanged += (sender, e) => RaisePropertyChanged("Continue");
             _stop.PropertyChanged += (sender, e) => RaisePropertyChanged("Stop");
             _playSelected.PropertyChanged += (sender, e) => RaisePropertyChanged("PlaySelected");
             _wheelModifier.PropertyChanged += (sender, e) => RaisePropertyChanged("WheelModifier");
+            _nextPreset.PropertyChanged += (sender, e) => RaisePropertyChanged("NextPreset");
+            _previousPreset.PropertyChanged += (sender, e) => RaisePropertyChanged("PreviousPreset");
         }
     }
 }

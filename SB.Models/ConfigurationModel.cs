@@ -127,6 +127,17 @@ namespace SB.Models
             }
         }
 
+        private bool _tileView;
+        public bool TileView
+        {
+            get { return _tileView; }
+            set
+            {
+                _tileView = value;
+                RaisePropertyChanged("TileView");
+            }
+        }
+
         private bool _showSelectionOverlay;
         public bool ShowSelectionOverlay
         {
