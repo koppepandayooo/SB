@@ -222,7 +222,7 @@
         </DataGrid>
         </Grid>
 
-        <!-- Tile view: sounds flow from left to right and wrap into rows, so many sounds need less scrolling -->
+        <!-- Multi-column view: the same rows as the list, flowing from left to right and wrapping into rows -->
         <Grid x:Name="TileHost">
             <Grid.Style>
                 <Style TargetType="Grid">
@@ -272,30 +272,28 @@
 
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
-                        <Setter Property="Width" Value="170" />
-                        <Setter Property="Margin" Value="2" />
+                        <Setter Property="Width" Value="290" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="Padding" Value="0" />
                         <Setter Property="ContextMenu" Value="{StaticResource TileMenu}" />
                         <EventSetter Event="PreviewMouseRightButtonDown" Handler="TileRightButtonDown" />
                         <Setter Property="Template">
                             <Setter.Value>
-                                <!-- Same look whether or not the window has focus, so the selection stays visible while in a game -->
+                                <!-- Looks like a row of the list; same colors whether or not the window has focus,
+                                     so the selection stays visible while in a game -->
                                 <ControlTemplate TargetType="ListBoxItem">
                                     <Border x:Name="Bd"
-                                            Background="#FFF7F7F7"
-                                            BorderBrush="#FFD5D5D5"
-                                            BorderThickness="1"
-                                            CornerRadius="4"
-                                            Padding="7,4">
+                                            Background="White"
+                                            BorderBrush="Black"
+                                            BorderThickness="0,0,1,1">
                                         <ContentPresenter />
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
                                             <Setter TargetName="Bd" Property="Background" Value="#FFE5F1FB" />
-                                            <Setter TargetName="Bd" Property="BorderBrush" Value="#FF7DB7E8" />
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-                                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                                             <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
                                         </Trigger>
                                     </ControlTemplate.Triggers>
@@ -308,20 +306,24 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid ToolTip="{Binding Name}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,0,12,0" />
-                            <TextBlock Grid.Row="1" Text="{Binding Keys, Converter={StaticResource vKeysToStringConverter}}"
-                                       FontSize="11" Opacity="0.7" TextTrimming="CharacterEllipsis" MinHeight="15" />
-                            <Ellipse Grid.RowSpan="2" Width="9" Height="9" Fill="#FFD10000"
-                                     HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,0,0"
-                                     Visibility="{Binding Error, Converter={StaticResource stringToVisibilityConverter}}">
-                                <Ellipse.ToolTip>
-                                    <ToolTip Content="{Binding Error}" />
-                                </Ellipse.ToolTip>
-                            </Ellipse>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="170" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Name}" Margin="4,2" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                            <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1,0,0,0">
+                                <DockPanel Margin="4,2">
+                                    <Ellipse DockPanel.Dock="Right" Width="10" Height="10" Margin="3,0"
+                                             Fill="#FFD10000" VerticalAlignment="Center"
+                                             Visibility="{Binding Error, Converter={StaticResource stringToVisibilityConverter}}">
+                                        <Ellipse.ToolTip>
+                                            <ToolTip Content="{Binding Error}" />
+                                        </Ellipse.ToolTip>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding Keys, Converter={StaticResource vKeysToStringConverter}}"
+                                               TextTrimming="CharacterEllipsis" VerticalAlignment="Center" MinHeight="14" />
+                                </DockPanel>
+                            </Border>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

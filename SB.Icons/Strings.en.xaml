@@ -80,7 +80,7 @@
     <sys:String x:Key="Str_NextPresetLabel" xml:space="preserve">Next preset:</sys:String>
     <sys:String x:Key="Str_PreviousPresetLabel" xml:space="preserve">Previous preset:</sys:String>
     <sys:String x:Key="Str_PresetKeysTip" xml:space="preserve">Switches to the next / previous preset. Each preset can also have its own key (Settings > Presets).</sys:String>
-    <sys:String x:Key="Str_TileView" xml:space="preserve">Tile view (several columns)</sys:String>
+    <sys:String x:Key="Str_TileView" xml:space="preserve">Multi-column view</sys:String>
     <sys:String x:Key="Str_Sort" xml:space="preserve">Sort</sys:String>
     <sys:String x:Key="Str_SortAdded" xml:space="preserve">Order added</sys:String>
     <sys:String x:Key="Str_SortNameAsc" xml:space="preserve">Name A-Z</sys:String>
