@@ -22,6 +22,8 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Content="{DynamicResource Str_NameLabel}" />
@@ -50,5 +52,19 @@
         <Label Grid.Row="4" Grid.Column="0" Content="{DynamicResource Str_LoopLabel}" />
         <CheckBox Grid.Row="4" Grid.Column="1" Margin="5" ToolTip="{DynamicResource Str_AppliesNextPlay}"
                   IsChecked="{Binding ApplicationStateModel.ModifiedSound.Loop}" />
+
+        <Label Grid.Row="5" Grid.Column="0" Content="{DynamicResource Str_CopiesLabel}" />
+        <Slider Grid.Row="5" Grid.Column="1" Margin="5" Minimum="1" Maximum="10" TickFrequency="1" SmallChange="1" LargeChange="1"
+                IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" ToolTip="{DynamicResource Str_CopiesTip}"
+                Value="{Binding ApplicationStateModel.ModifiedSound.Copies}" />
+        <TextBlock Grid.Row="5" Grid.Column="2" Margin="0,0,5,0" MinWidth="44" VerticalAlignment="Center"
+                   Text="{Binding ApplicationStateModel.ModifiedSound.Copies, StringFormat='×{0}'}" />
+
+        <Label Grid.Row="6" Grid.Column="0" Content="{DynamicResource Str_CopyDelayLabel}" />
+        <Slider Grid.Row="6" Grid.Column="1" Margin="5" Minimum="0" Maximum="500" TickFrequency="10" SmallChange="10" LargeChange="10"
+                IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" ToolTip="{DynamicResource Str_CopyDelayTip}"
+                Value="{Binding ApplicationStateModel.ModifiedSound.CopyDelay}" />
+        <TextBlock Grid.Row="6" Grid.Column="2" Margin="0,0,5,0" MinWidth="44" VerticalAlignment="Center"
+                   Text="{Binding ApplicationStateModel.ModifiedSound.CopyDelay, StringFormat='{}{0} ms'}" />
     </Grid>
 </UserControl>

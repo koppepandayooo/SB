@@ -33,9 +33,10 @@ namespace SB.SoundPlayer
             _outputDevice.Play();
         }
 
-        public void PlaySound(string fileName, float volume, bool loop)
+        /// <param name="addToPlaying">Add to what is playing even when overlapping is off (used for extra copies of one sound).</param>
+        public void PlaySound(string fileName, float volume, bool loop, bool addToPlaying = false)
         {
-            if (!Overlap)
+            if (!Overlap && !addToPlaying)
             {
                 Stop();
             }

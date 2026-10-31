@@ -3,6 +3,8 @@ using SB.SoundPlayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SB.Business
 {
@@ -79,14 +81,70 @@ namespace SB.Business
             }
 
             string file = sound.Files[_random.Next(sound.Files.Count)];
+            float volume = sound.Volume / 100f;
+            bool loop = sound.Loop;
+            int copies = Math.Max(1, Math.Min(MaxCopies, sound.Copies));
+            int delay = Math.Max(0, sound.CopyDelay);
+
+            // Without overlapping, a new sound replaces the old one, including copies still waiting to start
+            if (!_overlap) CancelPendingCopies();
+            CancellationToken token = CurrentCopiesToken();
+
             try
             {
-                if (_primarySoundPlayer != null) _primarySoundPlayer.PlaySound(file, sound.Volume / 100f, sound.Loop);
-                if (_secondarySoundPlayer != null) _secondarySoundPlayer.PlaySound(file, sound.Volume / 100f, sound.Loop);
+                PlayOnDevices(file, volume, loop, false);
             }
             catch (Exception ex)
             {
                 sound.Error = ex.ToString();
+                return;
+            }
+
+            // The extra copies play the same file; all at once, or one after another every "delay" ms
+            for (int i = 1; i < copies; i++)
+            {
+                if (delay == 0)
+                {
+                    TryPlayCopy(file, volume, loop);
+                }
+                else
+                {
+                    Task.Delay(i * delay, token).ContinueWith(
+                        t => { if (!t.IsCanceled) TryPlayCopy(file, volume, loop); },
+                        TaskScheduler.Default);
+                }
+            }
+        }
+
+        public const int MaxCopies = 10;
+
+        private CancellationTokenSource _copiesCts = new CancellationTokenSource();
+        private readonly object _copiesLock = new object();
+
+        private void PlayOnDevices(string file, float volume, bool loop, bool addToPlaying)
+        {
+            if (_primarySoundPlayer != null) _primarySoundPlayer.PlaySound(file, volume, loop, addToPlaying);
+            if (_secondarySoundPlayer != null) _secondarySoundPlayer.PlaySound(file, volume, loop, addToPlaying);
+        }
+
+        private void TryPlayCopy(string file, float volume, bool loop)
+        {
+            // The first copy already reported any problem with the file, and this may run on another thread
+            try { PlayOnDevices(file, volume, loop, true); }
+            catch (Exception) { }
+        }
+
+        private CancellationToken CurrentCopiesToken()
+        {
+            lock (_copiesLock) return _copiesCts.Token;
+        }
+
+        private void CancelPendingCopies()
+        {
+            lock (_copiesLock)
+            {
+                _copiesCts.Cancel();
+                _copiesCts = new CancellationTokenSource();
             }
         }
 
@@ -104,6 +162,7 @@ namespace SB.Business
 
         public void Stop()
         {
+            CancelPendingCopies();
             if (_primarySoundPlayer != null) _primarySoundPlayer.Stop();
             if (_secondarySoundPlayer != null) _secondarySoundPlayer.Stop();
         }

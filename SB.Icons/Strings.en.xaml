@@ -85,4 +85,8 @@
     <sys:String x:Key="Str_SortAdded" xml:space="preserve">Order added</sys:String>
     <sys:String x:Key="Str_SortNameAsc" xml:space="preserve">Name A-Z</sys:String>
     <sys:String x:Key="Str_SortNameDesc" xml:space="preserve">Name Z-A</sys:String>
+    <sys:String x:Key="Str_CopiesLabel" xml:space="preserve">Stack:</sys:String>
+    <sys:String x:Key="Str_CopiesTip" xml:space="preserve">Each time this sound is played, this many copies of it start together (louder / thicker). 1 = normal. Change applies next time you play this sound.</sys:String>
+    <sys:String x:Key="Str_CopyDelayLabel" xml:space="preserve">Offset:</sys:String>
+    <sys:String x:Key="Str_CopyDelayTip" xml:space="preserve">Time between the start of one copy and the next. 0 = all at the same moment. Only matters when Stack is 2 or more.</sys:String>
 </ResourceDictionary>

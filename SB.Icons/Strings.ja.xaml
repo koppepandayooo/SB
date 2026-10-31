@@ -85,4 +85,8 @@
     <sys:String x:Key="Str_SortAdded" xml:space="preserve">追加順</sys:String>
     <sys:String x:Key="Str_SortNameAsc" xml:space="preserve">名前 A→Z</sys:String>
     <sys:String x:Key="Str_SortNameDesc" xml:space="preserve">名前 Z→A</sys:String>
+    <sys:String x:Key="Str_CopiesLabel" xml:space="preserve">重ねる数:</sys:String>
+    <sys:String x:Key="Str_CopiesTip" xml:space="preserve">この音を1回鳴らすたびに、同じ音をこの数だけ同時に鳴らします（音が大きく・厚くなります）。1 = 通常。次にこの音を鳴らしたときから反映されます。</sys:String>
+    <sys:String x:Key="Str_CopyDelayLabel" xml:space="preserve">ずらす間隔:</sys:String>
+    <sys:String x:Key="Str_CopyDelayTip" xml:space="preserve">1つ目と2つ目…の開始をずらす時間です。0 = すべて同時。「重ねる数」が2以上のときだけ効きます。</sys:String>
 </ResourceDictionary>

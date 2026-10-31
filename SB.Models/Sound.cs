@@ -55,6 +55,30 @@ namespace SB.Models
             }
         }
 
+        private int _copies = 1;
+        /// <summary>How many copies of the sound are started together by one play (1 = normal).</summary>
+        public int Copies
+        {
+            get { return _copies; }
+            set
+            {
+                _copies = value;
+                RaisePropertyChanged("Copies");
+            }
+        }
+
+        private int _copyDelay;
+        /// <summary>Milliseconds between the start of one copy and the next (0 = all at the same moment).</summary>
+        public int CopyDelay
+        {
+            get { return _copyDelay; }
+            set
+            {
+                _copyDelay = value;
+                RaisePropertyChanged("CopyDelay");
+            }
+        }
+
         private bool _loop;
         public bool Loop
         {
@@ -92,7 +116,7 @@ namespace SB.Models
 
         public object Clone()
         {
-            Sound clonedSound = new Sound() { Name = Name, Volume = Volume, Loop = Loop };
+            Sound clonedSound = new Sound() { Name = Name, Volume = Volume, Loop = Loop, Copies = Copies, CopyDelay = CopyDelay };
             foreach (string file in Files) clonedSound.Files.Add(file);
             foreach (VKey key in Keys) clonedSound.Keys.Add(key);
             return clonedSound;
