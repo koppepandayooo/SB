@@ -127,6 +127,30 @@ namespace SB.Models
             }
         }
 
+        private int _stackCount = 1;
+        /// <summary>How many copies of every sound one play starts (sounds can override this).</summary>
+        public int StackCount
+        {
+            get { return _stackCount; }
+            set
+            {
+                _stackCount = value;
+                RaisePropertyChanged("StackCount");
+            }
+        }
+
+        private int _stackOffset;
+        /// <summary>Milliseconds between the start of one copy and the next.</summary>
+        public int StackOffset
+        {
+            get { return _stackOffset; }
+            set
+            {
+                _stackOffset = value;
+                RaisePropertyChanged("StackOffset");
+            }
+        }
+
         private bool _tileView;
         public bool TileView
         {

@@ -142,6 +142,28 @@ namespace SB.ViewModels
             }
         }
 
+        public int StackCount
+        {
+            get { return _configurationModel.StackCount; }
+            set
+            {
+                _configurationModel.StackCount = (int)value;
+                _soundManager.StackCount = _configurationModel.StackCount;
+                RaisePropertyChanged("StackCount");
+            }
+        }
+
+        public int StackOffset
+        {
+            get { return _configurationModel.StackOffset; }
+            set
+            {
+                _configurationModel.StackOffset = (int)value;
+                _soundManager.StackOffset = _configurationModel.StackOffset;
+                RaisePropertyChanged("StackOffset");
+            }
+        }
+
         public bool Overlap
         {
             get { return _configurationModel.Overlap; }

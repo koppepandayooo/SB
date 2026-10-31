@@ -55,27 +55,30 @@ namespace SB.Models
             }
         }
 
-        private int _copies = 1;
-        /// <summary>How many copies of the sound are started together by one play (1 = normal).</summary>
-        public int Copies
+        private int _stackCount;
+        /// <summary>
+        /// How many copies of the sound are started together by one play.
+        /// 0 = use the app setting (and ignore StackOffset), 1 = just one, up to 10.
+        /// </summary>
+        public int StackCount
         {
-            get { return _copies; }
+            get { return _stackCount; }
             set
             {
-                _copies = value;
-                RaisePropertyChanged("Copies");
+                _stackCount = value;
+                RaisePropertyChanged("StackCount");
             }
         }
 
-        private int _copyDelay;
+        private int _stackOffset;
         /// <summary>Milliseconds between the start of one copy and the next (0 = all at the same moment).</summary>
-        public int CopyDelay
+        public int StackOffset
         {
-            get { return _copyDelay; }
+            get { return _stackOffset; }
             set
             {
-                _copyDelay = value;
-                RaisePropertyChanged("CopyDelay");
+                _stackOffset = value;
+                RaisePropertyChanged("StackOffset");
             }
         }
 
@@ -116,7 +119,7 @@ namespace SB.Models
 
         public object Clone()
         {
-            Sound clonedSound = new Sound() { Name = Name, Volume = Volume, Loop = Loop, Copies = Copies, CopyDelay = CopyDelay };
+            Sound clonedSound = new Sound() { Name = Name, Volume = Volume, Loop = Loop, StackCount = StackCount, StackOffset = StackOffset };
             foreach (string file in Files) clonedSound.Files.Add(file);
             foreach (VKey key in Keys) clonedSound.Keys.Add(key);
             return clonedSound;

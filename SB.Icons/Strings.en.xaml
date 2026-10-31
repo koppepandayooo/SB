@@ -86,7 +86,11 @@
     <sys:String x:Key="Str_SortNameAsc" xml:space="preserve">Name A-Z</sys:String>
     <sys:String x:Key="Str_SortNameDesc" xml:space="preserve">Name Z-A</sys:String>
     <sys:String x:Key="Str_CopiesLabel" xml:space="preserve">Stack:</sys:String>
-    <sys:String x:Key="Str_CopiesTip" xml:space="preserve">Each time this sound is played, this many copies of it start together (louder / thicker). 1 = normal. Change applies next time you play this sound.</sys:String>
+    <sys:String x:Key="Str_CopiesTip" xml:space="preserve">Each time this sound is played, this many copies of it start together (louder / thicker). 0 = use the app setting (Settings > Sound), 1 = just one. Change applies next time you play this sound.</sys:String>
     <sys:String x:Key="Str_CopyDelayLabel" xml:space="preserve">Offset:</sys:String>
-    <sys:String x:Key="Str_CopyDelayTip" xml:space="preserve">Time between the start of one copy and the next. 0 = all at the same moment. Only matters when Stack is 2 or more.</sys:String>
+    <sys:String x:Key="Str_CopyDelayTip" xml:space="preserve">Time between the start of one copy and the next. 0 = all at the same moment. Used only when this sound has its own stack number (1 or more).</sys:String>
+    <sys:String x:Key="Str_StackGroup" xml:space="preserve">Stack (several copies at once)</sys:String>
+    <sys:String x:Key="Str_StackCountTipApp" xml:space="preserve">Each time any sound is played, this many copies of it start together (louder / thicker). 1 = normal. A sound can use its own value in its settings.</sys:String>
+    <sys:String x:Key="Str_StackOffsetTipApp" xml:space="preserve">Time between the start of one copy and the next. 0 = all at the same moment. Only matters when the number is 2 or more.</sys:String>
+    <sys:String x:Key="Str_FollowApp" xml:space="preserve">App setting</sys:String>
 </ResourceDictionary>

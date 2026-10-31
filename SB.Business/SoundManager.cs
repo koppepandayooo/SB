@@ -71,6 +71,8 @@ namespace SB.Business
             PrimaryDeviceVolume = configurationModel.PrimaryDeviceVolume / 100f;
             SecondaryDeviceVolume = configurationModel.SecondaryDeviceVolume / 100f;
             Overlap = configurationModel.Overlap;
+            StackCount = configurationModel.StackCount;
+            StackOffset = configurationModel.StackOffset;
         }
 
         public void Play(Sound sound)
@@ -83,8 +85,10 @@ namespace SB.Business
             string file = sound.Files[_random.Next(sound.Files.Count)];
             float volume = sound.Volume / 100f;
             bool loop = sound.Loop;
-            int copies = Math.Max(1, Math.Min(MaxCopies, sound.Copies));
-            int delay = Math.Max(0, sound.CopyDelay);
+            // A sound with its own stack setting (> 0) uses it; 0 means "use the app setting"
+            bool own = sound.StackCount > 0;
+            int copies = Math.Max(1, Math.Min(MaxCopies, own ? sound.StackCount : StackCount));
+            int delay = Math.Max(0, own ? sound.StackOffset : StackOffset);
 
             // Without overlapping, a new sound replaces the old one, including copies still waiting to start
             if (!_overlap) CancelPendingCopies();
@@ -117,6 +121,12 @@ namespace SB.Business
         }
 
         public const int MaxCopies = 10;
+
+        /// <summary>App setting: copies started by one play (for sounds without their own setting).</summary>
+        public int StackCount { get; set; } = 1;
+
+        /// <summary>App setting: milliseconds between copies.</summary>
+        public int StackOffset { get; set; }
 
         private CancellationTokenSource _copiesCts = new CancellationTokenSource();
         private readonly object _copiesLock = new object();

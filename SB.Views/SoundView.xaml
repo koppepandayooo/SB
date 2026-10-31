@@ -54,17 +54,38 @@
                   IsChecked="{Binding ApplicationStateModel.ModifiedSound.Loop}" />
 
         <Label Grid.Row="5" Grid.Column="0" Content="{DynamicResource Str_CopiesLabel}" />
-        <Slider Grid.Row="5" Grid.Column="1" Margin="5" Minimum="1" Maximum="10" TickFrequency="1" SmallChange="1" LargeChange="1"
+        <Slider Grid.Row="5" Grid.Column="1" Margin="5" Minimum="0" Maximum="10" TickFrequency="1" SmallChange="1" LargeChange="1"
                 IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" ToolTip="{DynamicResource Str_CopiesTip}"
-                Value="{Binding ApplicationStateModel.ModifiedSound.Copies}" />
-        <TextBlock Grid.Row="5" Grid.Column="2" Margin="0,0,5,0" MinWidth="44" VerticalAlignment="Center"
-                   Text="{Binding ApplicationStateModel.ModifiedSound.Copies, StringFormat='×{0}'}" />
+                Value="{Binding ApplicationStateModel.ModifiedSound.StackCount}" />
+        <TextBlock Grid.Row="5" Grid.Column="2" Margin="0,0,5,0" MinWidth="64" VerticalAlignment="Center">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Text" Value="{Binding ApplicationStateModel.ModifiedSound.StackCount, StringFormat='×{0}'}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ApplicationStateModel.ModifiedSound.StackCount}" Value="0">
+                            <Setter Property="Text" Value="{DynamicResource Str_FollowApp}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
 
         <Label Grid.Row="6" Grid.Column="0" Content="{DynamicResource Str_CopyDelayLabel}" />
         <Slider Grid.Row="6" Grid.Column="1" Margin="5" Minimum="0" Maximum="500" TickFrequency="10" SmallChange="10" LargeChange="10"
                 IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" ToolTip="{DynamicResource Str_CopyDelayTip}"
-                Value="{Binding ApplicationStateModel.ModifiedSound.CopyDelay}" />
-        <TextBlock Grid.Row="6" Grid.Column="2" Margin="0,0,5,0" MinWidth="44" VerticalAlignment="Center"
-                   Text="{Binding ApplicationStateModel.ModifiedSound.CopyDelay, StringFormat='{}{0} ms'}" />
+                Value="{Binding ApplicationStateModel.ModifiedSound.StackOffset}">
+            <Slider.Style>
+                <Style TargetType="Slider">
+                    <Style.Triggers>
+                        <!-- only used together with the sound's own stack count -->
+                        <DataTrigger Binding="{Binding ApplicationStateModel.ModifiedSound.StackCount}" Value="0">
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Slider.Style>
+        </Slider>
+        <TextBlock Grid.Row="6" Grid.Column="2" Margin="0,0,5,0" MinWidth="64" VerticalAlignment="Center"
+                   Text="{Binding ApplicationStateModel.ModifiedSound.StackOffset, StringFormat='{}{0} ms'}" />
     </Grid>
 </UserControl>

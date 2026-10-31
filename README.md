@@ -17,6 +17,7 @@ It is a modified version of [Deathcounter and Soundboard](https://github.com/Kal
 - Select several sounds (Ctrl/Shift+click, Ctrl+A) and press Delete to remove them together.
 - Per sound: name, one or more files (a random one is played), key or key combination, volume, loop,
   and "Stack" (play several copies of the sound at once on one press, optionally offset by some milliseconds).
+- "Stack" can be set for all sounds in Settings > Sound; a sound can use its own value instead.
 - Presets to switch between lists of sounds, even with a keyboard shortcut.
 - Pause / continue / stop shortcuts, overlap sounds, one or two output devices, minimize to tray.
 - English and Japanese UI (Settings > Other > Language).
