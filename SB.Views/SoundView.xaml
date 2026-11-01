@@ -54,7 +54,7 @@
                   IsChecked="{Binding ApplicationStateModel.ModifiedSound.Loop}" />
 
         <Label Grid.Row="5" Grid.Column="0" Content="{DynamicResource Str_CopiesLabel}" />
-        <Slider Grid.Row="5" Grid.Column="1" Margin="5" Minimum="0" Maximum="10" TickFrequency="1" SmallChange="1" LargeChange="1"
+        <Slider Grid.Row="5" Grid.Column="1" Margin="5" Minimum="0" Maximum="50" TickFrequency="1" SmallChange="1" LargeChange="1"
                 IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" ToolTip="{DynamicResource Str_CopiesTip}"
                 Value="{Binding ApplicationStateModel.ModifiedSound.StackCount}" />
         <TextBlock Grid.Row="5" Grid.Column="2" Margin="0,0,5,0" MinWidth="64" VerticalAlignment="Center">

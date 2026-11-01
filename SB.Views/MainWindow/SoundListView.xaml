@@ -142,6 +142,7 @@
             </Grid.Style>
         <DataGrid x:Name="SoundGrid"
                   SelectionChanged="SoundGridSelectionChanged"
+                  Sorting="SoundGridSorting"
                   ItemsSource="{Binding ConfigurationModel.SelectedPreset.SoundCollection}" 
                   SelectedItem="{Binding ConfigurationModel.SelectedPreset.SelectedSound, Mode=TwoWay}"
                   Interactivity:Commands.DoubleClickCommand="{Binding PlayCommand}"

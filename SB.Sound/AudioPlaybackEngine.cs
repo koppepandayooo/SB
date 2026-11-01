@@ -33,12 +33,25 @@ namespace SB.SoundPlayer
             _outputDevice.Play();
         }
 
+        /// <param name="shared">Several copies of the sound are started together: decode it once and let the copies share it.</param>
         /// <param name="addToPlaying">Add to what is playing even when overlapping is off (used for extra copies of one sound).</param>
-        public void PlaySound(string fileName, float volume, bool loop, bool addToPlaying = false)
+        public void PlaySound(string fileName, float volume, bool loop, bool addToPlaying = false, bool shared = false)
         {
             if (!Overlap && !addToPlaying)
             {
                 Stop();
+            }
+
+            // Opening and decoding the file takes several ms for each copy, so many copies would start late
+            CachedSound cached = shared ? CachedSound.Get(fileName) : null;
+            if (cached != null)
+            {
+                AddMixerInput(new MemorySampleReader(cached, loop), volume);
+                if (_outputDevice.PlaybackState != PlaybackState.Playing)
+                {
+                    _outputDevice.Play();
+                }
+                return;
             }
 
             IAudioReader input;

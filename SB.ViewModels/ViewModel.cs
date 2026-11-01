@@ -186,6 +186,16 @@ namespace SB.ViewModels
             }
         }
 
+        public string SortMode
+        {
+            get { return _configurationModel.SortMode; }
+            set
+            {
+                _configurationModel.SortMode = value;
+                RaisePropertyChanged("SortMode");
+            }
+        }
+
         public bool TileView
         {
             get { return _configurationModel.TileView; }

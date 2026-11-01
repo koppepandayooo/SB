@@ -19,6 +19,9 @@ namespace SB.Views.MainWindow
     {
         private bool _syncingSortCombo;
 
+        // One sort order shared by every preset: "none" (added order), "asc" or "desc"; kept in the configuration
+        private string _sortTag = "none";
+
         public SoundListView()
         {
             InitializeComponent();
@@ -32,18 +35,42 @@ namespace SB.Views.MainWindow
                 e.Handled = true;
             };
 
-            // A new preset has a new collection (and a new view), so apply the chosen sort to it again
+            // A new preset has a new collection (and a new view), so apply the shared sort to it
             DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(ListBox))
-                .AddValueChanged(SoundTiles, (sender, e) =>
-                {
-                    if (TileHost.Visibility == Visibility.Visible) ApplySort();
-                });
+                .AddValueChanged(SoundTiles, (sender, e) => ApplySort());
+            DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(DataGrid))
+                .AddValueChanged(SoundGrid, (sender, e) => ApplySort());
 
-            // Sorting by a column header in the list view changes the same view; show it in the sort box
-            TileHost.IsVisibleChanged += (sender, e) =>
+            // Take the saved sort order once the configuration is available
+            DataContextChanged += (sender, e) =>
             {
-                if (TileHost.Visibility == Visibility.Visible) SyncSortCombo();
+                if (DataContext is ViewModel viewModel)
+                {
+                    _sortTag = viewModel.SortMode ?? "none";
+                    if (SortCombo.Items.Cast<ComboBoxItem>().All(x => (string)x.Tag != _sortTag)) _sortTag = "none";
+                    SyncSortCombo();
+                    ApplySort();
+                }
             };
+
+            SyncSortCombo();
+        }
+
+        private void SaveSort()
+        {
+            if (DataContext is ViewModel viewModel) viewModel.SortMode = _sortTag;
+        }
+
+        // Clicking the Name header cycles the shared sort (added order -> A-Z -> Z-A) instead of sorting only this preset
+        private void SoundGridSorting(object sender, DataGridSortingEventArgs e)
+        {
+            e.Handled = true;
+            if (e.Column.Header as string != "Name") return;
+
+            _sortTag = _sortTag == "none" ? "asc" : _sortTag == "asc" ? "desc" : "none";
+            SyncSortCombo();
+            ApplySort();
+            SaveSort();
         }
 
         private void SoundGridSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -96,35 +123,39 @@ namespace SB.Views.MainWindow
         private void SortComboSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Fires while the XAML is still being loaded (initial selection), before the list exists
-            if (!_syncingSortCombo && SoundTiles != null)
-                ApplySort();
+            if (_syncingSortCombo || SoundTiles == null) return;
+            _sortTag = (SortCombo.SelectedItem as ComboBoxItem)?.Tag as string ?? "none";
+            ApplySort();
+            SaveSort();
         }
 
         private void ApplySort()
         {
-            ICollectionView view = SoundTiles.ItemsSource == null ? null : CollectionViewSource.GetDefaultView(SoundTiles.ItemsSource);
-            if (view == null) return;
-
-            string tag = (SortCombo.SelectedItem as ComboBoxItem)?.Tag as string;
-            using (view.DeferRefresh())
+            foreach (object source in new object[] { SoundTiles.ItemsSource, SoundGrid.ItemsSource })
             {
-                view.SortDescriptions.Clear();
-                if (tag == "asc")
-                    view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
-                else if (tag == "desc")
-                    view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Descending));
+                ICollectionView view = source == null ? null : CollectionViewSource.GetDefaultView(source);
+                if (view == null) continue;
+
+                using (view.DeferRefresh())
+                {
+                    view.SortDescriptions.Clear();
+                    if (_sortTag == "asc")
+                        view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+                    else if (_sortTag == "desc")
+                        view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Descending));
+                }
             }
+
+            DataGridColumn nameColumn = SoundGrid.Columns.FirstOrDefault(c => c.Header as string == "Name");
+            if (nameColumn != null)
+                nameColumn.SortDirection = _sortTag == "asc" ? ListSortDirection.Ascending
+                    : _sortTag == "desc" ? ListSortDirection.Descending : (ListSortDirection?)null;
         }
 
         private void SyncSortCombo()
         {
-            ICollectionView view = SoundTiles.ItemsSource == null ? null : CollectionViewSource.GetDefaultView(SoundTiles.ItemsSource);
-            string tag = "none";
-            if (view != null && view.SortDescriptions.Count == 1 && view.SortDescriptions[0].PropertyName == "Name")
-                tag = view.SortDescriptions[0].Direction == ListSortDirection.Ascending ? "asc" : "desc";
-
             _syncingSortCombo = true;
-            SortCombo.SelectedItem = SortCombo.Items.Cast<ComboBoxItem>().First(x => (string)x.Tag == tag);
+            SortCombo.SelectedItem = SortCombo.Items.Cast<ComboBoxItem>().First(x => (string)x.Tag == _sortTag);
             _syncingSortCombo = false;
         }
     }

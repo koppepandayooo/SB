@@ -151,6 +151,18 @@ namespace SB.Models
             }
         }
 
+        private string _sortMode = "none";
+        /// <summary>Sort order of the sound list, shared by all presets: "none" (added order), "asc" or "desc".</summary>
+        public string SortMode
+        {
+            get { return _sortMode; }
+            set
+            {
+                _sortMode = value;
+                RaisePropertyChanged("SortMode");
+            }
+        }
+
         private bool _tileView;
         public bool TileView
         {

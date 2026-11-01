@@ -90,13 +90,16 @@ namespace SB.Business
             int copies = Math.Max(1, Math.Min(MaxCopies, own ? sound.StackCount : StackCount));
             int delay = Math.Max(0, own ? sound.StackOffset : StackOffset);
 
+            // From a few copies on, decoding the file once is quicker than opening it for every copy
+            bool shared = copies >= SharedFromCopies;
+
             // Without overlapping, a new sound replaces the old one, including copies still waiting to start
             if (!_overlap) CancelPendingCopies();
             CancellationToken token = CurrentCopiesToken();
 
             try
             {
-                PlayOnDevices(file, volume, loop, false);
+                PlayOnDevices(file, volume, loop, false, shared);
             }
             catch (Exception ex)
             {
@@ -109,18 +112,19 @@ namespace SB.Business
             {
                 if (delay == 0)
                 {
-                    TryPlayCopy(file, volume, loop);
+                    TryPlayCopy(file, volume, loop, shared);
                 }
                 else
                 {
                     Task.Delay(i * delay, token).ContinueWith(
-                        t => { if (!t.IsCanceled) TryPlayCopy(file, volume, loop); },
+                        t => { if (!t.IsCanceled) TryPlayCopy(file, volume, loop, shared); },
                         TaskScheduler.Default);
                 }
             }
         }
 
-        public const int MaxCopies = 10;
+        public const int MaxCopies = 50;
+        private const int SharedFromCopies = 4;
 
         /// <summary>App setting: copies started by one play (for sounds without their own setting).</summary>
         public int StackCount { get; set; } = 1;
@@ -131,16 +135,16 @@ namespace SB.Business
         private CancellationTokenSource _copiesCts = new CancellationTokenSource();
         private readonly object _copiesLock = new object();
 
-        private void PlayOnDevices(string file, float volume, bool loop, bool addToPlaying)
+        private void PlayOnDevices(string file, float volume, bool loop, bool addToPlaying, bool shared)
         {
-            if (_primarySoundPlayer != null) _primarySoundPlayer.PlaySound(file, volume, loop, addToPlaying);
-            if (_secondarySoundPlayer != null) _secondarySoundPlayer.PlaySound(file, volume, loop, addToPlaying);
+            if (_primarySoundPlayer != null) _primarySoundPlayer.PlaySound(file, volume, loop, addToPlaying, shared);
+            if (_secondarySoundPlayer != null) _secondarySoundPlayer.PlaySound(file, volume, loop, addToPlaying, shared);
         }
 
-        private void TryPlayCopy(string file, float volume, bool loop)
+        private void TryPlayCopy(string file, float volume, bool loop, bool shared)
         {
             // The first copy already reported any problem with the file, and this may run on another thread
-            try { PlayOnDevices(file, volume, loop, true); }
+            try { PlayOnDevices(file, volume, loop, true, shared); }
             catch (Exception) { }
         }
 
