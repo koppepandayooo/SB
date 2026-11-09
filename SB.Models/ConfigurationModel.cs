@@ -163,6 +163,42 @@ namespace SB.Models
             }
         }
 
+        private int _stackJitter = 40;
+        /// <summary>Each stacked copy also starts up to this many milliseconds late, at random.</summary>
+        public int StackJitter
+        {
+            get { return _stackJitter; }
+            set
+            {
+                _stackJitter = value;
+                RaisePropertyChanged("StackJitter");
+            }
+        }
+
+        private int _playbackSpeed = 100;
+        /// <summary>Playback speed in percent (100 = normal); the pitch stays the same.</summary>
+        public int PlaybackSpeed
+        {
+            get { return _playbackSpeed; }
+            set
+            {
+                _playbackSpeed = value;
+                RaisePropertyChanged("PlaybackSpeed");
+            }
+        }
+
+        private int _pitch;
+        /// <summary>Pitch change in semitones (0 = normal); the speed stays the same.</summary>
+        public int Pitch
+        {
+            get { return _pitch; }
+            set
+            {
+                _pitch = value;
+                RaisePropertyChanged("Pitch");
+            }
+        }
+
         private bool _tileView;
         public bool TileView
         {

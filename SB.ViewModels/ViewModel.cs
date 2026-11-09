@@ -186,6 +186,39 @@ namespace SB.ViewModels
             }
         }
 
+        public int StackJitter
+        {
+            get { return _configurationModel.StackJitter; }
+            set
+            {
+                _configurationModel.StackJitter = (int)value;
+                _soundManager.StackJitter = _configurationModel.StackJitter;
+                RaisePropertyChanged("StackJitter");
+            }
+        }
+
+        public int PlaybackSpeed
+        {
+            get { return _configurationModel.PlaybackSpeed; }
+            set
+            {
+                _configurationModel.PlaybackSpeed = (int)value;
+                _soundManager.PlaybackSpeed = _configurationModel.PlaybackSpeed;
+                RaisePropertyChanged("PlaybackSpeed");
+            }
+        }
+
+        public int Pitch
+        {
+            get { return _configurationModel.Pitch; }
+            set
+            {
+                _configurationModel.Pitch = (int)value;
+                _soundManager.Pitch = _configurationModel.Pitch;
+                RaisePropertyChanged("Pitch");
+            }
+        }
+
         public string SortMode
         {
             get { return _configurationModel.SortMode; }

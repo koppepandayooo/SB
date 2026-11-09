@@ -19,6 +19,9 @@ It is a modified version of [Deathcounter and Soundboard](https://github.com/Kal
   and "Stack" (play several copies of the sound at once on one press, optionally offset by some milliseconds).
 - "Stack" (up to 50) can be set for all sounds in Settings > Sound; a sound can use its own value instead.
 - The sort order of the sound list (added order / name A-Z / name Z-A) is shared by all presets and remembered.
+- Stacked copies start at slightly random times ("Randomness" in Settings > Sound), like several SB windows playing at once.
+- Playback speed (50-200 %) and pitch (-12 to +12 semitones) can be set independently in Settings > Sound.
+- "Check for updates" can download and install the new version for you.
 - Presets to switch between lists of sounds, even with a keyboard shortcut.
 - Pause / continue / stop shortcuts, overlap sounds, one or two output devices, minimize to tray.
 - English and Japanese UI (Settings > Other > Language).

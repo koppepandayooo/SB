@@ -3,8 +3,6 @@ using SB.SoundPlayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SB.Business
 {
@@ -73,6 +71,9 @@ namespace SB.Business
             Overlap = configurationModel.Overlap;
             StackCount = configurationModel.StackCount;
             StackOffset = configurationModel.StackOffset;
+            StackJitter = configurationModel.StackJitter;
+            PlaybackSpeed = configurationModel.PlaybackSpeed;
+            Pitch = configurationModel.Pitch;
         }
 
         public void Play(Sound sound)
@@ -88,43 +89,35 @@ namespace SB.Business
             // A sound with its own stack setting (> 0) uses it; 0 means "use the app setting"
             bool own = sound.StackCount > 0;
             int copies = Math.Max(1, Math.Min(MaxCopies, own ? sound.StackCount : StackCount));
-            int delay = Math.Max(0, own ? sound.StackOffset : StackOffset);
+            int offset = Math.Max(0, own ? sound.StackOffset : StackOffset);
 
-            // From a few copies on, decoding the file once is quicker than opening it for every copy
+            // With several copies, decoding the file once is quicker than opening it for every copy
             bool shared = copies >= SharedFromCopies;
 
-            // Without overlapping, a new sound replaces the old one, including copies still waiting to start
-            if (!_overlap) CancelPendingCopies();
-            CancellationToken token = CurrentCopiesToken();
-
-            try
+            // The copies are all started now; each one has its own start offset inside the mixer
+            // (a regular step plus a random part, so they do not add up to one louder copy of the same waveform)
+            // Without overlapping, the first copy replaces what is playing, including copies that have not started yet
+            for (int i = 0; i < copies; i++)
             {
-                PlayOnDevices(file, volume, loop, false, shared);
-            }
-            catch (Exception ex)
-            {
-                sound.Error = ex.ToString();
-                return;
-            }
-
-            // The extra copies play the same file; all at once, or one after another every "delay" ms
-            for (int i = 1; i < copies; i++)
-            {
-                if (delay == 0)
+                int start = i == 0 ? 0 : i * offset + (StackJitter > 0 ? _random.Next(0, StackJitter + 1) : 0);
+                try
                 {
-                    TryPlayCopy(file, volume, loop, shared);
+                    PlayOnDevices(file, volume, loop, i > 0, shared, start);
                 }
-                else
+                catch (Exception ex)
                 {
-                    Task.Delay(i * delay, token).ContinueWith(
-                        t => { if (!t.IsCanceled) TryPlayCopy(file, volume, loop, shared); },
-                        TaskScheduler.Default);
+                    // Only the first copy reports a problem with the file
+                    if (i == 0)
+                    {
+                        sound.Error = ex.ToString();
+                        return;
+                    }
                 }
             }
         }
 
         public const int MaxCopies = 50;
-        private const int SharedFromCopies = 4;
+        private const int SharedFromCopies = 2;
 
         /// <summary>App setting: copies started by one play (for sounds without their own setting).</summary>
         public int StackCount { get; set; } = 1;
@@ -132,34 +125,21 @@ namespace SB.Business
         /// <summary>App setting: milliseconds between copies.</summary>
         public int StackOffset { get; set; }
 
-        private CancellationTokenSource _copiesCts = new CancellationTokenSource();
-        private readonly object _copiesLock = new object();
+        /// <summary>App setting: each copy also starts up to this many milliseconds late, at random.</summary>
+        public int StackJitter { get; set; }
 
-        private void PlayOnDevices(string file, float volume, bool loop, bool addToPlaying, bool shared)
-        {
-            if (_primarySoundPlayer != null) _primarySoundPlayer.PlaySound(file, volume, loop, addToPlaying, shared);
-            if (_secondarySoundPlayer != null) _secondarySoundPlayer.PlaySound(file, volume, loop, addToPlaying, shared);
-        }
+        /// <summary>App setting: playback speed in percent (100 = normal), without changing the pitch.</summary>
+        public int PlaybackSpeed { get; set; } = 100;
 
-        private void TryPlayCopy(string file, float volume, bool loop, bool shared)
-        {
-            // The first copy already reported any problem with the file, and this may run on another thread
-            try { PlayOnDevices(file, volume, loop, true, shared); }
-            catch (Exception) { }
-        }
+        /// <summary>App setting: pitch change in semitones (0 = normal), without changing the speed.</summary>
+        public int Pitch { get; set; }
 
-        private CancellationToken CurrentCopiesToken()
+        private void PlayOnDevices(string file, float volume, bool loop, bool addToPlaying, bool shared, int delayMs)
         {
-            lock (_copiesLock) return _copiesCts.Token;
-        }
-
-        private void CancelPendingCopies()
-        {
-            lock (_copiesLock)
-            {
-                _copiesCts.Cancel();
-                _copiesCts = new CancellationTokenSource();
-            }
+            float speed = Math.Max(50, Math.Min(200, PlaybackSpeed)) / 100f;
+            float pitch = Math.Max(-12, Math.Min(12, Pitch));
+            if (_primarySoundPlayer != null) _primarySoundPlayer.PlaySound(file, volume, loop, addToPlaying, shared, delayMs, speed, pitch);
+            if (_secondarySoundPlayer != null) _secondarySoundPlayer.PlaySound(file, volume, loop, addToPlaying, shared, delayMs, speed, pitch);
         }
 
         public void Pause()
@@ -176,7 +156,6 @@ namespace SB.Business
 
         public void Stop()
         {
-            CancelPendingCopies();
             if (_primarySoundPlayer != null) _primarySoundPlayer.Stop();
             if (_secondarySoundPlayer != null) _secondarySoundPlayer.Stop();
         }

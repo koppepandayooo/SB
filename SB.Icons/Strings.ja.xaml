@@ -93,4 +93,13 @@
     <sys:String x:Key="Str_StackCountTipApp" xml:space="preserve">どの音でも、1回鳴らすたびに、同じ音をこの数だけ同時に鳴らします（音が大きく・厚くなります）。1 = 通常。音ごとの設定で、別の値にもできます。</sys:String>
     <sys:String x:Key="Str_StackOffsetTipApp" xml:space="preserve">1つ目と2つ目…の開始をずらす時間です。0 = すべて同時。重ねる数が2以上のときだけ効きます。</sys:String>
     <sys:String x:Key="Str_FollowApp" xml:space="preserve">設定に従う</sys:String>
+    <sys:String x:Key="Str_UpdateInstallMessage" xml:space="preserve">バージョン {0} が公開されています。&#x0a;今すぐダウンロードしてインストールしますか？終わるとSBは自動で再起動します。</sys:String>
+    <sys:String x:Key="Str_UpdateDownloading" xml:space="preserve">更新をダウンロードしています...</sys:String>
+    <sys:String x:Key="Str_StackJitterLabel" xml:space="preserve">ばらつき:</sys:String>
+    <sys:String x:Key="Str_StackJitterTip" xml:space="preserve">各コピーの開始を、この値（ms）までのランダムな時間だけ遅らせます。SBを複数起動して同時に鳴らしたような音になります。0 = 完全に同時に鳴るので、ただ音が大きくなるだけです。</sys:String>
+    <sys:String x:Key="Str_PlaybackGroup" xml:space="preserve">再生速度とピッチ</sys:String>
+    <sys:String x:Key="Str_SpeedLabel" xml:space="preserve">再生速度:</sys:String>
+    <sys:String x:Key="Str_SpeedTip" xml:space="preserve">すべての音の再生速度です。100 % = 通常。速度を変えても音の高さは変わりません。次に音を鳴らしたときから反映されます。</sys:String>
+    <sys:String x:Key="Str_PitchLabel" xml:space="preserve">ピッチ:</sys:String>
+    <sys:String x:Key="Str_PitchTip" xml:space="preserve">すべての音の高さを半音単位で変えます（12 = 1オクターブ）。0 = 通常。ピッチを変えても速さは変わりません。次に音を鳴らしたときから反映されます。</sys:String>
 </ResourceDictionary>

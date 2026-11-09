@@ -33,9 +33,12 @@ namespace SB.SoundPlayer
             _outputDevice.Play();
         }
 
+        /// <param name="speed">Playback speed (1 = normal); the pitch is not changed by it.</param>
+        /// <param name="pitchSemitones">Pitch change in semitones (0 = normal); the speed is not changed by it.</param>
+        /// <param name="delayMs">Start this long after now, counted in the mixer itself.</param>
         /// <param name="shared">Several copies of the sound are started together: decode it once and let the copies share it.</param>
         /// <param name="addToPlaying">Add to what is playing even when overlapping is off (used for extra copies of one sound).</param>
-        public void PlaySound(string fileName, float volume, bool loop, bool addToPlaying = false, bool shared = false)
+        public void PlaySound(string fileName, float volume, bool loop, bool addToPlaying = false, bool shared = false, int delayMs = 0, float speed = 1f, float pitchSemitones = 0f)
         {
             if (!Overlap && !addToPlaying)
             {
@@ -46,7 +49,7 @@ namespace SB.SoundPlayer
             CachedSound cached = shared ? CachedSound.Get(fileName) : null;
             if (cached != null)
             {
-                AddMixerInput(new MemorySampleReader(cached, loop), volume);
+                AddMixerInput(new MemorySampleReader(cached, loop), volume, delayMs, speed, pitchSemitones);
                 if (_outputDevice.PlaybackState != PlaybackState.Playing)
                 {
                     _outputDevice.Play();
@@ -65,7 +68,7 @@ namespace SB.SoundPlayer
             }
 
             SampleReader reader = new SampleReader(input, loop);
-            AddMixerInput(reader, volume);
+            AddMixerInput(reader, volume, delayMs, speed, pitchSemitones);
 
             if (_outputDevice.PlaybackState != PlaybackState.Playing)
             {
@@ -119,9 +122,25 @@ namespace SB.SoundPlayer
             return new WdlResamplingSampleProvider(input, _mixer.WaveFormat.SampleRate);
         }
 
-        private void AddMixerInput(ISampleProvider input, float volume)
+        private void AddMixerInput(ISampleProvider input, float volume, int delayMs = 0, float speed = 1f, float pitchSemitones = 0f)
         {
             ISampleProvider convertedInput = ConvertToRightSampleRate(ConvertToRightChannelCount(input));
+
+            // Resampling alone changes speed and pitch together; the pitch shifter then moves the pitch to where it
+            // should be, so speed and pitch can be set independently
+            if (Math.Abs(speed - 1f) > 0.001f)
+            {
+                convertedInput = new WdlResamplingSampleProvider(new RateSampleProvider(convertedInput, speed), _mixer.WaveFormat.SampleRate);
+            }
+            float pitchFactor = (float)Math.Pow(2.0, pitchSemitones / 12.0) / speed;
+            if (Math.Abs(pitchFactor - 1f) > 0.001f)
+            {
+                convertedInput = new SmbPitchShiftingSampleProvider(convertedInput, 2048, 4, pitchFactor);
+            }
+            if (delayMs > 0)
+            {
+                convertedInput = new OffsetSampleProvider(convertedInput) { DelayBy = TimeSpan.FromMilliseconds(delayMs) };
+            }
             VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(convertedInput) { Volume = AdjustVolume(volume) };
             _mixer.AddMixerInput(volumeSampleProvider);
         }

@@ -21,6 +21,12 @@ Function LaunchAsUser
 	Exec '"$WINDIR\explorer.exe" "$INSTDIR\SB.exe"'
 FunctionEnd
 
+# silent installs (used by the in-app update) have no finish page, so start SB here
+Function .onInstSuccess
+	IfSilent 0 +2
+	Call LaunchAsUser
+FunctionEnd
+
 # install pages
 	!insertmacro MUI_PAGE_WELCOME
 	!insertmacro MUI_PAGE_DIRECTORY
@@ -47,6 +53,11 @@ FunctionEnd
 Section
     # creating start menu shortcuts for all users
     SetShellVarContext all
+
+    # an update started from SB: make sure the old SB has quit so its files can be replaced
+    IfSilent 0 +3
+    nsExec::Exec 'taskkill /F /IM SB.exe'
+    Sleep 1000
 
     # set the installation directory as the destination for the following actions
     SetOutPath $INSTDIR
