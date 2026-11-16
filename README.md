@@ -26,7 +26,7 @@ It is a modified version of [Deathcounter and Soundboard](https://github.com/Kal
 - Pause / continue / stop shortcuts, overlap sounds, one or two output devices, minimize to tray.
 - English and Japanese UI (Settings > Other > Language).
 
-Supported audio formats: wma, mp3, wav, ogg, m4a, aiff, flac.
+Supported audio formats: wma, mp3, wav, ogg, m4a, aiff, flac, and mp4 (only the audio of a video is used).
 
 ## Building
 ```

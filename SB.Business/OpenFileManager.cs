@@ -5,14 +5,14 @@ namespace SB.Business
 {
     public class OpenFileManager
     {
-        public static readonly string[] SoundExtensions = { ".wma", ".mp3", ".wav", ".ogg", ".m4a", ".aiff", ".flac" };
+        public static readonly string[] SoundExtensions = { ".wma", ".mp3", ".wav", ".ogg", ".m4a", ".aiff", ".flac", ".mp4" };
 
         public string[] OpenSoundFiles()
         {
             OpenFileDialog fileDialog = new OpenFileDialog
             {
                 Title = UiLanguage.Get("Str_ChooseSoundFiles"),
-                Filter = UiLanguage.Get("Str_SoundFilesFilter") + " (*.wma; *.mp3; *.wav; *.ogg; *.m4a; *.aiff; *.flac)|*.wma;*.mp3;*.wav;*.ogg;*.m4a;*.aiff;*.flac",
+                Filter = UiLanguage.Get("Str_SoundFilesFilter") + " (*.wma; *.mp3; *.wav; *.ogg; *.m4a; *.aiff; *.flac; *.mp4)|*.wma;*.mp3;*.wav;*.ogg;*.m4a;*.aiff;*.flac;*.mp4",
                 AddExtension = true,
                 RestoreDirectory = true,
                 Multiselect = true
